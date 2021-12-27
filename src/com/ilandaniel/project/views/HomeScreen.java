@@ -3,24 +3,24 @@ package com.ilandaniel.project.views;
 import com.ilandaniel.project.classes.Expense;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IViewModel;
+import com.mysql.cj.xdevapi.Table;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Vector;
 
 public class HomeScreen extends BaseScreen {
     private JPanel panelNorth, panelCenter;
     private JTable tableExpense;
     List<Expense> expenseList = new ArrayList<>();
     private JLabel labelTitle;
-    private JButton btnAddExpense, btnManageCategory, btnGetReports, btnDeleteSelected;
+    private JButton btnAddExpense, btnManageCategory, btnGetReports, btnLogout;
     private GridBagConstraints bagConstraints;
     private IViewModel viewModel;
     private JScrollPane scrollPane;
@@ -39,7 +39,7 @@ public class HomeScreen extends BaseScreen {
         btnAddExpense = new JButton("Add new expense");
         btnManageCategory = new JButton("Manage Category's");
         btnGetReports = new JButton("Get Reports");
-        btnDeleteSelected = new JButton("Delete selected");
+        btnLogout = new JButton("Logout");
         bagConstraints = new GridBagConstraints();
         initTable();
     }
@@ -72,11 +72,12 @@ public class HomeScreen extends BaseScreen {
         panelNorth.add(btnGetReports, bagConstraints);
 
         bagConstraints.gridx = 5;
-        panelNorth.add(btnDeleteSelected, bagConstraints);
+        panelNorth.add(btnLogout, bagConstraints);
 
 
         panelCenter.add(scrollPane, BorderLayout.CENTER);
         panelCenter.setBorder(new EmptyBorder(10, 0, 0, 0));
+
 
 
         this.add(panelNorth, BorderLayout.NORTH);
@@ -84,9 +85,7 @@ public class HomeScreen extends BaseScreen {
 
         setLocationRelativeTo(null);
 
-        //homeViewModel.setExpensesList(Helper.loggedInAccount.getId());
-
-        this.setSize(800, 400);
+        this.setMinimumSize(new Dimension(800,400));
 
         btnManageCategory.addActionListener(new ActionListener() {
             @Override
@@ -108,6 +107,13 @@ public class HomeScreen extends BaseScreen {
                 viewModel.showScreen("Reports");
             }
         });
+
+        btnLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewModel.logout();
+            }
+        });
     }
 
     @Override
@@ -123,12 +129,6 @@ public class HomeScreen extends BaseScreen {
     public void loadTableExpenses(List<Expense> expenseList) {
         this.expenseList = expenseList;
         DisplayExpense(expenseList);
-
-        String[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date", "Actions"};
-        Object[][] objects = new Object[expenseList.size()][];
-        Vector v3 = new Vector();
-        int i = 1;
-
     }
 
 
@@ -144,9 +144,10 @@ public class HomeScreen extends BaseScreen {
             @Override
             public Class<?> getColumnClass(int column) {
                 switch (column) {
-
                     case 1:
                         return ImageIcon.class;
+                    case 6:
+                        return Date.class;
                     default:
                         return Object.class;
                 }
@@ -155,26 +156,36 @@ public class HomeScreen extends BaseScreen {
         };
 
         //setting the column name
-        Object[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date", "Actions"};
+        Object[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date"};
         aModel.setColumnIdentifiers(headers);
         if (expenseList == null) {
             this.tableExpense.setModel(aModel);
             return;
         }
 
-        Object[] objects = new Object[8];
+        int [] size= {25,50,60,60,110,375,120};
+        Object[] objects = new Object[7];
         ListIterator<Expense> expenseListIterator = expenseList.listIterator();
         int i = 1;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int k =0;
+                for (int col:size){
+                    TableColumn column = tableExpense.getColumnModel().getColumn(k++);
+                    column.setMinWidth(col);
+                    column.setMaxWidth(col);
+                    column.setPreferredWidth(col);
+                }
+            }
+        });
 
         //populating the tablemodel
         while (expenseListIterator.hasNext()) {
             Expense expense = expenseListIterator.next();
-            //viewModel.getCategoryNameById(expense.getCategoryId());
-            //ImageIcon icon = new ImageIcon(Helper.getIconPathByCategoryName(expense.getCategoryName()));
             String categoryName = expense.getCategoryName();
             String path = Helper.getIconPathByCategoryName(categoryName);
             ImageIcon icon = new ImageIcon(getClass().getResource(path));
-            //Icon icon1 = new ImageIcon(path);
             objects[0] = i++;
             objects[1] = icon;
             objects[2] = categoryName;
@@ -182,7 +193,6 @@ public class HomeScreen extends BaseScreen {
             objects[4] = expense.getCost();
             objects[5] = expense.getInfo();
             objects[6] = expense.getDateCreated();
-            objects[7] = "D";
 
             aModel.addRow(objects);
         }

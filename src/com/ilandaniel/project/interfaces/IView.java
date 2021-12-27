@@ -27,5 +27,5 @@ public interface IView {
     void loadCategoriesNames(List<String> names);
 
 
-    void loadResportsExpenses(List<Expense> expensesList);
+    void loadReportsExpenses(List<Expense> expensesList);
 }

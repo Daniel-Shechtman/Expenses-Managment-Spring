@@ -10,7 +10,6 @@ public abstract class BaseScreen extends JFrame implements IScreen {
 
     @Override
     public void dispose2() {
-        System.out.println("dispose");
         this.dispose();
     }
 }

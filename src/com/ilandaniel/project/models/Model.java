@@ -100,7 +100,7 @@ public class Model implements IModel {
 
     @Override
     public List<Expense> getReport(String fromDateStr, String toDateStr) throws ProjectException {
-        String pattern = "dd-mm-yyyy";
+        String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         List<Expense> filterredExpenses = new ArrayList<>();
         ReportsValidator validator = new ReportsValidator();
@@ -119,15 +119,14 @@ public class Model implements IModel {
                 Date fromDate = simpleDateFormat.parse(fromDateStr);
                 Date toDate = simpleDateFormat.parse(toDateStr);
 
-                Timestamp fromTimestamp = new Timestamp(fromDate.getTime());
-                Timestamp toTimestamp = new Timestamp(toDate.getTime());
-
-                String query = "SELECT FROM expenses WHERE account_id = " + Helper.loggedInAccount.getId() + " AND date_created >= " + fromTimestamp.getTime() + " AND date_created <= " + toTimestamp.getTime();
+                long fromDateL = fromDate.getTime();
+                long toDateL = toDate.getTime();
+                String query = "SELECT * FROM expenses WHERE account_id = " + Helper.loggedInAccount.getId() + " AND date_created >= " + fromDateL + " AND date_created <= " + toDateL;
                 ResultSet rs = DataBase.selectAll(connection, query);
 
                 if(rs != null)
                 {
-                    while(rs.next())
+                    do
                     {
                         Expense expense = new Expense();
                         expense.setId(rs.getInt("id"));
@@ -135,10 +134,11 @@ public class Model implements IModel {
                         expense.setCost(rs.getFloat("cost"));
                         expense.setCurrency(rs.getString("currency"));
                         expense.setCategoryId(rs.getInt("category_id"));
-                        expense.setDateCreated(rs.getLong("date_created"));
+                        expense.setDateCreated(new Date(rs.getLong("date_created")));
                         expense.setCategoryName(categoryModel.getCategoryNameById(expense.getCategoryId()));
                         filterredExpenses.add(expense);
                     }
+                    while (rs.next());
                 }
                 else {
                     throw new ProjectException("there are no expenses matches your dates");

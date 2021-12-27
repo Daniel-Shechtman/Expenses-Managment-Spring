@@ -9,7 +9,7 @@ public class Expense {
     private float cost;
     private String currency;
     private String info;
-    private long dateCreated;
+    private Date dateCreated;
 
     public Expense() {
     }
@@ -62,11 +62,11 @@ public class Expense {
         this.info = info;
     }
 
-    public long getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(long date) {
+    public void setDateCreated(Date date) {
         this.dateCreated = date;
     }
 

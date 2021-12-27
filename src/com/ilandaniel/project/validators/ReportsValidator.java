@@ -26,7 +26,7 @@ public class ReportsValidator implements IValidator {
                         errors.append("Invalid month");
                     }
                     if(year<2021 || year>2100){
-                        errors.append("Invalid year");
+                        errors.append("Invalid year\nmin year = 2021\nmax year = 2100");
                     }
                 }catch (Exception e){
                     errors.append("Wrong format");

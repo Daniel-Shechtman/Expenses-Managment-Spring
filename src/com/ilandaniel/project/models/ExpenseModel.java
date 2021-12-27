@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ExpenseModel {
@@ -35,7 +37,7 @@ public class ExpenseModel {
                 preparedStatement.setFloat(3, Float.parseFloat(expenseDTO.getCost()));
                 preparedStatement.setString(4, expenseDTO.getCurrency());
                 preparedStatement.setString(5, expenseDTO.getInfo());
-                preparedStatement.setLong(6, System.currentTimeMillis());
+                preparedStatement.setLong(6,System.currentTimeMillis());
                 preparedStatement.execute();
                 preparedStatement.close();
             } catch (SQLException throwables) {
@@ -64,7 +66,7 @@ public class ExpenseModel {
                     expense.setCost(rs.getFloat("cost"));
                     expense.setCurrency(rs.getString("currency"));
                     expense.setCategoryId(rs.getInt("category_id"));
-                    expense.setDateCreated(rs.getLong("date_created"));
+                    expense.setDateCreated(new Date(rs.getLong("date_created")));
                     expense.setCategoryName(categoryModel.getCategoryNameById(expense.getCategoryId()));
                     returnList.add(expense);
 

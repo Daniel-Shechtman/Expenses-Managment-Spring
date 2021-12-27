@@ -5,6 +5,11 @@ import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +41,8 @@ public class AddExpenseScreen extends BaseScreen {
         comboBoxCategories = new JComboBox<>();
         comboBoxCurrencies = new JComboBox<>();
         textFieldCost = new JTextField(15);
-        textAreaInfo = new JTextArea(5, 15);
+        textAreaInfo = new JTextArea(3,15);
+        textAreaInfo.setLineWrap(true);
         constraints = new GridBagConstraints();
 
     }

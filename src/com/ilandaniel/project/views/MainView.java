@@ -220,7 +220,7 @@ public class MainView implements IView {
     }
 
     @Override
-    public void loadResportsExpenses(List<Expense> expensesList) {
+    public void loadReportsExpenses(List<Expense> expensesList) {
         if (SwingUtilities.isEventDispatchThread()) {
             if (currentScreen == reportsScreen) {
                 reportsScreen.loadTableExpenses(expensesList);

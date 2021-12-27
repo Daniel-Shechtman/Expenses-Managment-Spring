@@ -302,13 +302,29 @@ public class ViewModel implements IViewModel {
             public void run() {
                 try {
                     List<Expense> expensesList = model.getReport(fromDate,toDate);
-                    view.loadResportsExpenses(expensesList);
+                    view.loadReportsExpenses(expensesList);
                 } catch (ProjectException e) {
                     view.showMessage("Errors", e.getMessage());
                 }
             }
         });
 
+    }
+
+    @Override
+    public void logout() {
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                Helper.loggedInAccount = null;
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        showScreen("Login");
+                    }
+                });
+            }
+        });
     }
 
 

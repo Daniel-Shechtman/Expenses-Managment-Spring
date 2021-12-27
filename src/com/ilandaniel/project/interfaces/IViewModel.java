@@ -36,4 +36,6 @@ public interface IViewModel {
     void createAccount(AccountRegisterDTO client);
 
     void getReport(String fromDate,String toDate);
+
+    void logout();
 }
