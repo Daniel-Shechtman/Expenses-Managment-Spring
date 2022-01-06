@@ -3,23 +3,15 @@ package com.ilandaniel.project.models;
 import com.ilandaniel.project.dtos.AccountLoginDTO;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.exceptions.ProjectException;
-import com.ilandaniel.project.helpers.DataBase;
-import com.ilandaniel.project.helpers.Security;
 import com.ilandaniel.project.interfaces.IValidator;
 import com.ilandaniel.project.validators.LoginValidator;
 import com.ilandaniel.project.validators.RegisterValidator;
-import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class AccountModel {
 

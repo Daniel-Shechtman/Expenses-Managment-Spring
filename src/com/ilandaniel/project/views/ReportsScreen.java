@@ -3,28 +3,33 @@ package com.ilandaniel.project.views;
 
 import com.ilandaniel.project.classes.Expense;
 import com.ilandaniel.project.helpers.Helper;
+import com.ilandaniel.project.helpers.pdf.PdfCreator;
 import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.io.File;
 import java.util.List;
+import java.util.*;
 
 public class ReportsScreen extends BaseScreen {
     private JPanel panelNorth, panelCenter,panelSouth;
+    private JFileChooser fileChooser;
     private JLabel labelFromDate, labelToDate,labelInstruction,labelSumOfExpenses,labelExpensesTotal;
     private JTextField  tfFromDate, tfToDate;
-    private JButton btnCancel, btnGetReport;
+    private JButton btnCancel, btnGetReport, btnSaveReportAsPdf;
     private JComboBox comboBoxCurrencies;
     private JTable tableExpenses;
     private JScrollPane scrollPane;
     private GridBagConstraints gridBagConstraints;
     private String currentCurrency = "ILS";
     private double totalSum = 0;
+    List<Expense> expensesList = new LinkedList<>();
 
 
 
@@ -37,6 +42,7 @@ public class ReportsScreen extends BaseScreen {
 
     @Override
     public void init() {
+        fileChooser = new JFileChooser();
         scrollPane = new JScrollPane();
         tableExpenses = new JTable();
         panelNorth = new JPanel(new GridBagLayout());
@@ -52,6 +58,7 @@ public class ReportsScreen extends BaseScreen {
         labelInstruction = new JLabel("<html><font color='red'>Valid date format: DD-MM-YYYY<br><br>Minimum year: 2021<br>Max year: 2100</font></html>");
         btnCancel = new JButton("Cancel");
         btnGetReport = new JButton("Get Report");
+        btnSaveReportAsPdf = new JButton("Save Report As PDF");
         gridBagConstraints = new GridBagConstraints();
 
 
@@ -63,6 +70,12 @@ public class ReportsScreen extends BaseScreen {
         this.setVisible(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // init file chooser
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF files", "pdf");
+        fileChooser.setFileFilter(filter);
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.setDialogTitle("select path to save file");
 
 
         gridBagConstraints.insets = new Insets(5,5,5,5);
@@ -115,6 +128,29 @@ public class ReportsScreen extends BaseScreen {
         panelSouth.add(comboBoxCurrencies);
 
 
+        btnSaveReportAsPdf.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton b = (JButton) e.getSource();
+                int userSelection = fileChooser.showSaveDialog(b.getParent());
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    String[][] strData = saveDataAssStrDoubleArr();
+                    PdfCreator pdfCreator = new PdfCreator();
+                    pdfCreator.createPdfFile(fileToSave.getPath(), strData);
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Helper.showMessage("Report", "Report Saved");
+                        }
+                    });
+                }
+            }
+        });
+
+
         this.add(panelNorth, BorderLayout.NORTH);
         this.add(panelCenter, BorderLayout.CENTER);
         this.add(panelSouth,BorderLayout.SOUTH);
@@ -122,8 +158,6 @@ public class ReportsScreen extends BaseScreen {
         setLocationRelativeTo(null);
 
         this.setMinimumSize(new Dimension(900,400));
-
-
 
 
 
@@ -136,10 +170,26 @@ public class ReportsScreen extends BaseScreen {
         btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
     }
 
+    private String[][] saveDataAssStrDoubleArr() {
+        String [][] data = new String[expensesList.size()][];
+
+        int i = 0;
+        for(Expense expense : expensesList)
+        {
+            data[i] = new String[5];
+            data[i][0] = expense.getCategoryName();
+            data[i][1] = expense.getCurrency();
+            data[i][2] = String.valueOf(expense.getCost());
+            data[i][3] = expense.getInfo();
+            data[i][4] = expense.getDateCreated().toString();
+        }
+
+        return data;
+    }
+
     public void loadTableExpenses(List<Expense> expensesList) {
+        this.expensesList = expensesList;
         DisplayExpense(expensesList);
-
-
     }
 
     private void DisplayExpense(List<Expense> expenseList) {

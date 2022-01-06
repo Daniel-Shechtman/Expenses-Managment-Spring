@@ -1,10 +1,8 @@
 package com.ilandaniel.project.views;
 
 import com.ilandaniel.project.classes.Expense;
-import com.ilandaniel.project.exceptions.ProjectException;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IViewModel;
-import com.mysql.cj.xdevapi.Table;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,8 +12,10 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 
 public class HomeScreen extends BaseScreen {
