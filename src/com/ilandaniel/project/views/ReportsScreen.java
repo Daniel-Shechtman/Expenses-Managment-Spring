@@ -149,6 +149,7 @@ public class ReportsScreen extends BaseScreen {
                 }
             }
         });
+        panelSouth.add(btnSaveReportAsPdf);
 
 
         this.add(panelNorth, BorderLayout.NORTH);
