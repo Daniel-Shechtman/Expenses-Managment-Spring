@@ -3,10 +3,18 @@ package com.ilandaniel.project.helpers;
 import com.ilandaniel.project.classes.Account;
 
 import javax.swing.*;
+import java.util.HashMap;
 
 public class Helper {
 
     public static Account loggedInAccount;
+    public static HashMap<String,Float> currencies = new HashMap<>();
+
+    static {
+        currencies.put("ILS",1f);
+        currencies.put("USD",3.11f);
+        currencies.put("EURO",3.51f);
+    }
 
 
     public static void showMessage(String title, String message) {

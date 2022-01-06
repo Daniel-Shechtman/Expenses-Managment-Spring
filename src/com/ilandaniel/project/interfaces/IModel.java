@@ -35,4 +35,6 @@ public interface IModel {
 
     List<Expense> getReport(String fromDate,String toDate) throws  ProjectException;
 
+    public void deleteSelected(int id) throws ProjectException;
+
 }

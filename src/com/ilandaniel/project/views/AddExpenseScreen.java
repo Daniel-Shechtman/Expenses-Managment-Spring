@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Map;
 
 public class AddExpenseScreen extends BaseScreen {
     private JLabel labelTitle, labelCategories, labelCost, labelCurrency, labelInfo;
@@ -153,8 +154,8 @@ public class AddExpenseScreen extends BaseScreen {
     }
 
     public void setCurrencies() {
-        comboBoxCurrencies.addItem("ILS");
-        comboBoxCurrencies.addItem("USD");
-        comboBoxCurrencies.addItem("EURO");
+        for(Map.Entry set:Helper.currencies.entrySet()){
+            comboBoxCurrencies.addItem(set.getKey().toString());
+    }
     }
 }

@@ -4,6 +4,7 @@ import com.ilandaniel.project.classes.Category;
 import com.ilandaniel.project.dtos.AccountLoginDTO;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.dtos.ExpenseDTO;
+import com.ilandaniel.project.exceptions.ProjectException;
 
 public interface IViewModel {
     void setModel(IModel model);
@@ -38,4 +39,6 @@ public interface IViewModel {
     void getReport(String fromDate,String toDate);
 
     void logout();
+
+    public void deleteSelected(int id) ;
 }

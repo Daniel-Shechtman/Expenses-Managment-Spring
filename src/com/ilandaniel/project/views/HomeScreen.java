@@ -1,6 +1,7 @@
 package com.ilandaniel.project.views;
 
 import com.ilandaniel.project.classes.Expense;
+import com.ilandaniel.project.exceptions.ProjectException;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IViewModel;
 import com.mysql.cj.xdevapi.Table;
@@ -8,12 +9,14 @@ import com.mysql.cj.xdevapi.Table;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
+
 
 public class HomeScreen extends BaseScreen {
     private JPanel panelNorth, panelCenter;
@@ -85,7 +88,7 @@ public class HomeScreen extends BaseScreen {
 
         setLocationRelativeTo(null);
 
-        this.setMinimumSize(new Dimension(800,400));
+        this.setMinimumSize(new Dimension(900,600));
 
         btnManageCategory.addActionListener(new ActionListener() {
             @Override
@@ -138,6 +141,9 @@ public class HomeScreen extends BaseScreen {
             //setting the jtable read only
             @Override
             public boolean isCellEditable(int row, int column) {
+                if(column == 7){
+                    return true;
+                }
                 return false;
             }
 
@@ -156,15 +162,15 @@ public class HomeScreen extends BaseScreen {
         };
 
         //setting the column name
-        Object[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date"};
+        Object[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date",""};
         aModel.setColumnIdentifiers(headers);
         if (expenseList == null) {
             this.tableExpense.setModel(aModel);
             return;
         }
 
-        int [] size= {25,50,60,60,110,375,120};
-        Object[] objects = new Object[7];
+        int [] size= {25, 50, 100, 60, 110, 315, 120,100};
+        Object[] objects = new Object[8];
         ListIterator<Expense> expenseListIterator = expenseList.listIterator();
         int i = 1;
         SwingUtilities.invokeLater(new Runnable() {
@@ -193,9 +199,18 @@ public class HomeScreen extends BaseScreen {
             objects[4] = expense.getCost();
             objects[5] = expense.getInfo();
             objects[6] = expense.getDateCreated();
+            objects[7] = expense.getId();
 
             aModel.addRow(objects);
         }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                tableExpense.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+                tableExpense.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JTextField()));
+            }
+        });
 
         //binding the jtable to the model
         this.tableExpense.setModel(aModel);
@@ -204,6 +219,92 @@ public class HomeScreen extends BaseScreen {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    class ButtonRenderer extends JButton implements TableCellRenderer
+    {
+
+        //CONSTRUCTOR
+        public ButtonRenderer() {
+            //SET BUTTON PROPERTIES
+            setOpaque(true);
+        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object obj,
+                                                       boolean selected, boolean focused, int row, int col) {
+
+            //SET PASSED OBJECT AS BUTTON TEXT
+            setText((obj==null) ? "":"Delete");
+
+            return this;
+        }
+
+    }
+
+    //BUTTON EDITOR CLASS
+    class ButtonEditor extends DefaultCellEditor
+    {
+        protected JButton btn;
+        private String lbl;
+        private Boolean clicked;
+
+        public ButtonEditor(JTextField txt) {
+            super(txt);
+
+            btn=new JButton();
+            btn.setOpaque(true);
+
+            //WHEN BUTTON IS CLICKED
+            btn.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        //OVERRIDE A COUPLE OF METHODS
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object obj,
+                                                     boolean selected, int row, int col) {
+
+            //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+            lbl=(obj==null) ? "":obj.toString();
+            btn.setText("Delete");
+            clicked=true;
+            viewModel.deleteSelected(Integer.parseInt(lbl));
+
+            return btn;
+        }
+
+        //IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
+        @Override
+        public Object getCellEditorValue() {
+
+            if(clicked)
+            {
+                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
+            }
+            //SET IT TO FALSE NOW THAT ITS CLICKED
+            clicked=false;
+            return new String("Delete");
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+
+            //SET CLICKED TO FALSE FIRST
+            clicked=false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+            // TODO Auto-generated method stub
+            super.fireEditingStopped();
+        }
     }
 
 

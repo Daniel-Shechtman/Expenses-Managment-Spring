@@ -7,15 +7,19 @@ import com.ilandaniel.project.helpers.DataBase;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IValidator;
 import com.ilandaniel.project.validators.ExpenseValidator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ExpenseModel {
 
@@ -52,34 +56,36 @@ public class ExpenseModel {
      * getting all the expenses of the account by account_id.
      */
     public List<Expense> getAllExpenses(int accountId) throws ProjectException {
-        List<Expense> returnList = new ArrayList<>(5);
-        try (Connection connection = DataBase.getConnection()) {
+        List<Expense> expenses = new LinkedList<>();
 
-            String query = "SELECT * FROM expenses WHERE account_id = " + accountId;
-            ResultSet rs = DataBase.selectAll(connection, query);
-            if (rs != null) {
+        try {
+            HttpClient httpClient = HttpClient.newBuilder().build();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/expenses/getExpenses/" + accountId)).GET().build();
+            HttpResponse httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-                do {
-                    Expense expense = new Expense();
-                    expense.setId(rs.getInt("id"));
-                    expense.setInfo(rs.getString("info"));
-                    expense.setCost(rs.getFloat("cost"));
-                    expense.setCurrency(rs.getString("currency"));
-                    expense.setCategoryId(rs.getInt("category_id"));
-                    expense.setDateCreated(new Date(rs.getLong("date_created")));
-                    expense.setCategoryName(categoryModel.getCategoryNameById(expense.getCategoryId()));
-                    returnList.add(expense);
-
-                } while (rs.next());
+            JSONArray array = new JSONArray(httpResponse.body().toString());
+            for(int i=0;i<array.length();i++){
+                JSONObject object = array.getJSONObject(i);
+                Expense expense = new Expense();
+                expense.setId(object.getInt("id"));
+                expense.setInfo(object.getString("info"));
+                expense.setCost(object.getFloat("cost"));
+                expense.setCurrency(object.getString("currency"));
+                expense.setCategoryId(object.getInt("categoryId"));
+                expense.setDateCreated(new Date(object.getLong("dateCreated")));
+                expense.setCategoryName(categoryModel.getCategoryNameById(expense.getCategoryId()));
+                expenses.add(expense);
             }
 
-
-        } catch (SQLException throwables) {
-            throw new ProjectException("HomeModel, getAllExpenses method. error: " + throwables.getMessage());
+        } catch (IOException e) {
+            throw new ProjectException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw  new ProjectException(e.getMessage());
         }
 
-        return returnList;
+
+        return expenses;
+    }
     }
 
 
-}

@@ -179,6 +179,12 @@ public class ViewModel implements IViewModel {
                 try {
                     errors = model.loginUser(client);
                 } catch (ProjectException e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.showMessage("Errors",e.getMessage());
+                        }
+                    });
                     e.printStackTrace();
                 }
                 if (errors != null && !errors.isEmpty()) {
@@ -323,6 +329,21 @@ public class ViewModel implements IViewModel {
                         showScreen("Login");
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void deleteSelected(int id)  {
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    model.deleteSelected(id);
+                    initTableExpenses(Helper.loggedInAccount.getId());
+                } catch (ProjectException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

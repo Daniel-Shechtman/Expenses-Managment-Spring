@@ -11,10 +11,7 @@ import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IModel;
 import com.ilandaniel.project.validators.ReportsValidator;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -153,5 +150,18 @@ public class Model implements IModel {
         }
 
         return filterredExpenses;
+    }
+
+    @Override
+    public void deleteSelected(int id) throws ProjectException {
+        try (Connection connection = DataBase.getConnection()){
+            String query = "DELETE FROM expenses WHERE id =?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

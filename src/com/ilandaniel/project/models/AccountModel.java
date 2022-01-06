@@ -8,7 +8,14 @@ import com.ilandaniel.project.helpers.Security;
 import com.ilandaniel.project.interfaces.IValidator;
 import com.ilandaniel.project.validators.LoginValidator;
 import com.ilandaniel.project.validators.RegisterValidator;
+import com.sun.net.httpserver.HttpServer;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,29 +38,22 @@ public class AccountModel {
      * see validators/LoginValidator.
      */
     public String loginUser(AccountLoginDTO client) throws ProjectException {
-        String errors = loginValidator.validate(client);
-        StringBuilder errorsBuilder = new StringBuilder(errors);
-        if (errorsBuilder.isEmpty()) {
-            try (Connection connection = DataBase.getConnection()) {
-                ResultSet rs = DataBase.selectAll(connection, "SELECT * FROM accounts WHERE username = '" + client.getUsername() + "'");
+        String errors = new String();
 
-                if (rs != null) {
-                    String storedHash = rs.getString("password_hash");
-                    String hash = Security.sha512Encryption(client.getPassword());
-                    if (!hash.equals(storedHash)) {
-                        errorsBuilder.append("Hash is not the same");
-                    }
-                } else {
-                    errorsBuilder.append("username is wrong\n");
-                }
+        try {
+            HttpClient httpClient = HttpClient.newBuilder().build();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/login/" + client.getUsername() + "/" + client.getPassword())).GET().build();
+            HttpResponse httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            errors = httpResponse.body().toString();
 
-            } catch (SQLException e) {
-                throw new ProjectException("LoginModel, loginUser method. error: " + e.getMessage());
-            }
 
+        } catch (IOException e) {
+            throw new ProjectException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new ProjectException(e.getMessage());
         }
 
-        return errorsBuilder.toString();
+        return errors;
     }
 
     /**
@@ -63,37 +63,23 @@ public class AccountModel {
      * see validators/RegisterValidator.
      */
     public String createAccount(AccountRegisterDTO client) throws ProjectException {
-        String errors = registerValidator.validate(client);
-        StringBuilder errorsBuilder = new StringBuilder(errors);
+        String errors = new String();
 
-        if (errorsBuilder.isEmpty()) {
-            try (Connection connection = DataBase.getConnection()) {
-                ResultSet rs = DataBase.selectAll(connection, "SELECT * FROM accounts WHERE username = '" + client.getUsername() + "'");
-                if (rs != null) {
-                    errorsBuilder.append("This username all ready exits\n");
-                }
-                if (errorsBuilder.isEmpty()) {
-                    // the mysql insert statement
-                    String query = " insert into accounts (username, password_hash)"
-                            + " values (?, ?)";
+        try {
+            HttpClient httpClient = HttpClient.newBuilder().build();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/createAccount/" + client.getUsername() + "/" + client.getPassword())).GET().build();
+            HttpResponse httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-                    String hashStr = Security.sha512Encryption(client.getPassword());
+            errors = httpResponse.body().toString();
 
-                    // create the mysql insert preparedstatement
-                    PreparedStatement preparedStmt = connection.prepareStatement(query);
-                    preparedStmt.setString(1, client.getUsername());
-                    preparedStmt.setString(2, hashStr);
 
-                    // execute the preparedstatement
-                    preparedStmt.execute();
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                throw new ProjectException("RegisterModel, createAccount. error: " + e.getMessage());
-            }
+        } catch (IOException e) {
+            throw new ProjectException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw  new ProjectException(e.getMessage());
         }
 
 
-        return errorsBuilder.toString();
+        return errors;
     }
 }
