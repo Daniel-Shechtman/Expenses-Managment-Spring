@@ -3,12 +3,9 @@ package com.ilandaniel.project.classes;
 public class Category {
     private int id;
     private int accountId;
-    private String icon;
     private String name;
 
-    public Category(String icon, String name) {
-
-        setIcon(icon);
+    public Category( String name) {
         setName(name);
     }
 
@@ -22,15 +19,6 @@ public class Category {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getName() {

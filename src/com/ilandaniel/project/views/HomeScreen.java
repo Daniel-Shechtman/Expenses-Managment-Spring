@@ -10,12 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 
 public class HomeScreen extends BaseScreen {
@@ -27,7 +23,6 @@ public class HomeScreen extends BaseScreen {
     private GridBagConstraints bagConstraints;
     private IViewModel viewModel;
     private JScrollPane scrollPane;
-    private String categoryName;
 
     public HomeScreen() {
 
@@ -82,51 +77,25 @@ public class HomeScreen extends BaseScreen {
         panelCenter.setBorder(new EmptyBorder(10, 0, 0, 0));
 
 
-
         this.add(panelNorth, BorderLayout.NORTH);
         this.add(panelCenter, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
 
-        this.setMinimumSize(new Dimension(900,600));
+        this.setMinimumSize(new Dimension(900, 600));
 
-        btnManageCategory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("Category");
-            }
-        });
+        btnManageCategory.addActionListener(e -> viewModel.showScreen("Category"));
 
-        btnAddExpense.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("AddExpense");
-            }
-        });
+        btnAddExpense.addActionListener(e -> viewModel.showScreen("AddExpense"));
 
-        btnGetReports.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("Reports");
-            }
-        });
+        btnGetReports.addActionListener(e -> viewModel.showScreen("Reports"));
 
-        btnLogout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.logout();
-            }
-        });
+        btnLogout.addActionListener(e -> viewModel.logout());
     }
 
     @Override
     public void setViewModel(IViewModel viewModel) {
         this.viewModel = viewModel;
-    }
-
-
-    public void showMessage(String msg) {
-        Helper.showMessage("Homepage", msg);
     }
 
     public void loadTableExpenses(List<Expense> expenseList) {
@@ -138,60 +107,51 @@ public class HomeScreen extends BaseScreen {
     private void DisplayExpense(List<Expense> expenseList) {
         DefaultTableModel aModel = new DefaultTableModel() {
 
-            //setting the jtable read only
+            //setting the jTable read only
             @Override
             public boolean isCellEditable(int row, int column) {
-                if(column == 7){
-                    return true;
-                }
-                return false;
+                return column == 7;
             }
 
             @Override
             public Class<?> getColumnClass(int column) {
-                switch (column) {
-                    case 1:
-                        return ImageIcon.class;
-                    case 6:
-                        return Date.class;
-                    default:
-                        return Object.class;
-                }
+                return switch (column) {
+                    case 1 -> ImageIcon.class;
+                    case 6 -> Date.class;
+                    default -> Object.class;
+                };
             }
 
         };
 
         //setting the column name
-        Object[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date",""};
+        Object[] headers = {"#", "Icon", "Category", "Currency", "Cost", "Info", "Date", ""};
         aModel.setColumnIdentifiers(headers);
         if (expenseList == null) {
             this.tableExpense.setModel(aModel);
             return;
         }
 
-        int [] size= {25, 50, 100, 60, 110, 315, 120,100};
+        int[] size = {25, 50, 100, 60, 110, 315, 120, 100};
         Object[] objects = new Object[8];
         ListIterator<Expense> expenseListIterator = expenseList.listIterator();
         int i = 1;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                int k =0;
-                for (int col:size){
-                    TableColumn column = tableExpense.getColumnModel().getColumn(k++);
-                    column.setMinWidth(col);
-                    column.setMaxWidth(col);
-                    column.setPreferredWidth(col);
-                }
+        SwingUtilities.invokeLater(() -> {
+            int k = 0;
+            for (int col : size) {
+                TableColumn column = tableExpense.getColumnModel().getColumn(k++);
+                column.setMinWidth(col);
+                column.setMaxWidth(col);
+                column.setPreferredWidth(col);
             }
         });
 
-        //populating the tablemodel
+        //populating the tableModel
         while (expenseListIterator.hasNext()) {
             Expense expense = expenseListIterator.next();
             String categoryName = expense.getCategoryName();
             String path = Helper.getIconPathByCategoryName(categoryName);
-            ImageIcon icon = new ImageIcon(getClass().getResource(path));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource(path)));
             objects[0] = i++;
             objects[1] = icon;
             objects[2] = categoryName;
@@ -204,37 +164,30 @@ public class HomeScreen extends BaseScreen {
             aModel.addRow(objects);
         }
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                tableExpense.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
-                tableExpense.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JTextField()));
-            }
+        SwingUtilities.invokeLater(() -> {
+            tableExpense.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+            tableExpense.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JTextField()));
         });
 
-        //binding the jtable to the model
+        //binding the jTable to the model
         this.tableExpense.setModel(aModel);
         scrollPane.setViewportView(tableExpense);
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    class ButtonRenderer extends JButton implements TableCellRenderer
-    {
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
         //CONSTRUCTOR
         public ButtonRenderer() {
             //SET BUTTON PROPERTIES
             setOpaque(true);
         }
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object obj,
                                                        boolean selected, boolean focused, int row, int col) {
 
             //SET PASSED OBJECT AS BUTTON TEXT
-            setText((obj==null) ? "":"Delete");
+            setText((obj == null) ? "" : "Delete");
 
             return this;
         }
@@ -242,27 +195,18 @@ public class HomeScreen extends BaseScreen {
     }
 
     //BUTTON EDITOR CLASS
-    class ButtonEditor extends DefaultCellEditor
-    {
+    class ButtonEditor extends DefaultCellEditor {
         protected JButton btn;
         private String lbl;
-        private Boolean clicked;
 
         public ButtonEditor(JTextField txt) {
             super(txt);
 
-            btn=new JButton();
+            btn = new JButton();
             btn.setOpaque(true);
 
             //WHEN BUTTON IS CLICKED
-            btn.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    fireEditingStopped();
-                }
-            });
+            btn.addActionListener(e -> fireEditingStopped());
         }
 
         //OVERRIDE A COUPLE OF METHODS
@@ -271,32 +215,25 @@ public class HomeScreen extends BaseScreen {
                                                      boolean selected, int row, int col) {
 
             //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
-            lbl=(obj==null) ? "":obj.toString();
+            lbl = (obj == null) ? "" : obj.toString();
             btn.setText("Delete");
-            clicked=true;
             viewModel.deleteSelected(Integer.parseInt(lbl));
 
             return btn;
         }
 
-        //IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
+        //IF BUTTON CELL VALUE CHANGES,IF CLICKED THAT IS
         @Override
         public Object getCellEditorValue() {
 
-            if(clicked)
-            {
-                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
-            }
             //SET IT TO FALSE NOW THAT ITS CLICKED
-            clicked=false;
-            return new String("Delete");
+            return "Delete";
         }
 
         @Override
         public boolean stopCellEditing() {
 
             //SET CLICKED TO FALSE FIRST
-            clicked=false;
             return super.stopCellEditing();
         }
 

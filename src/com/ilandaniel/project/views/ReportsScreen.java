@@ -11,17 +11,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.*;
 
 public class ReportsScreen extends BaseScreen {
-    private JPanel panelNorth, panelCenter,panelSouth;
+    private JPanel panelNorth, panelCenter, panelSouth;
     private JFileChooser fileChooser;
-    private JLabel labelFromDate, labelToDate,labelInstruction,labelSumOfExpenses,labelExpensesTotal;
-    private JTextField  tfFromDate, tfToDate;
+    private JLabel labelFromDate, labelToDate, labelInstruction, labelSumOfExpenses, labelExpensesTotal;
+    private JTextField tfFromDate, tfToDate;
     private JButton btnCancel, btnGetReport, btnSaveReportAsPdf;
     private JComboBox comboBoxCurrencies;
     private JTable tableExpenses;
@@ -30,9 +29,6 @@ public class ReportsScreen extends BaseScreen {
     private String currentCurrency = "ILS";
     private double totalSum = 0;
     List<Expense> expensesList = new LinkedList<>();
-
-
-
 
 
     @Override
@@ -52,8 +48,8 @@ public class ReportsScreen extends BaseScreen {
         labelToDate = new JLabel("To Date: ");
         labelSumOfExpenses = new JLabel("The Total Sum Of Selected Expenses: ");
         labelExpensesTotal = new JLabel("0");
-        tfFromDate = new JTextField (15);
-        tfToDate = new JTextField (15);
+        tfFromDate = new JTextField(15);
+        tfToDate = new JTextField(15);
         comboBoxCurrencies = new JComboBox();
         labelInstruction = new JLabel("<html><font color='red'>Valid date format: DD-MM-YYYY<br><br>Minimum year: 2021<br>Max year: 2100</font></html>");
         btnCancel = new JButton("Cancel");
@@ -78,7 +74,7 @@ public class ReportsScreen extends BaseScreen {
         fileChooser.setDialogTitle("select path to save file");
 
 
-        gridBagConstraints.insets = new Insets(5,5,5,5);
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         panelNorth.add(labelFromDate, gridBagConstraints);
@@ -86,11 +82,11 @@ public class ReportsScreen extends BaseScreen {
         gridBagConstraints.gridx = 1;
         panelNorth.add(tfFromDate, gridBagConstraints);
 
-        gridBagConstraints.gridx=2;
-        gridBagConstraints.gridheight=3;
-        panelNorth.add(labelInstruction,gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridheight = 3;
+        panelNorth.add(labelInstruction, gridBagConstraints);
 
-        gridBagConstraints.gridheight=1;
+        gridBagConstraints.gridheight = 1;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         panelNorth.add(labelToDate, gridBagConstraints);
@@ -110,43 +106,29 @@ public class ReportsScreen extends BaseScreen {
         panelCenter.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         setComboBoxCurrencies();
-        ActionListener cbActionListener = new ActionListener() {//add actionlistner to listen for change
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        //add actionListener to listen for change
+        ActionListener cbActionListener = e -> {
 
-                String s = (String) comboBoxCurrencies.getSelectedItem();//get the selected item
-                if(!s.equals(currentCurrency)){
-                    setLabelSumCurrencies(s);
-                    currentCurrency = s;
-                }
-
+            String s = (String) comboBoxCurrencies.getSelectedItem();//get the selected item
+            assert s != null;
+            if (!s.equals(currentCurrency)) {
+                setLabelSumCurrencies(s);
+                currentCurrency = s;
             }
+
         };
-        comboBoxCurrencies.addActionListener(cbActionListener);
-        panelSouth.add(labelSumOfExpenses);
-        panelSouth.add(labelExpensesTotal);
-        panelSouth.add(comboBoxCurrencies);
 
+        btnSaveReportAsPdf.addActionListener(e -> {
+            JButton b = (JButton) e.getSource();
+            int userSelection = fileChooser.showSaveDialog(b.getParent());
 
-        btnSaveReportAsPdf.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton b = (JButton) e.getSource();
-                int userSelection = fileChooser.showSaveDialog(b.getParent());
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                String[][] strData = saveDataAssStrDoubleArr();
+                PdfCreator pdfCreator = new PdfCreator();
+                pdfCreator.createPdfFile(fileToSave.getPath(), strData);
 
-                if (userSelection == JFileChooser.APPROVE_OPTION) {
-                    File fileToSave = fileChooser.getSelectedFile();
-                    String[][] strData = saveDataAssStrDoubleArr();
-                    PdfCreator pdfCreator = new PdfCreator();
-                    pdfCreator.createPdfFile(fileToSave.getPath(), strData);
-
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            Helper.showMessage("Report", "Report Saved");
-                        }
-                    });
-                }
+                SwingUtilities.invokeLater(() -> Helper.showMessage("Report", "Report Saved"));
             }
         });
         panelSouth.add(btnSaveReportAsPdf);
@@ -154,35 +136,40 @@ public class ReportsScreen extends BaseScreen {
 
         this.add(panelNorth, BorderLayout.NORTH);
         this.add(panelCenter, BorderLayout.CENTER);
-        this.add(panelSouth,BorderLayout.SOUTH);
+        this.add(panelSouth, BorderLayout.SOUTH);
 
         setLocationRelativeTo(null);
 
-        this.setMinimumSize(new Dimension(900,400));
-
+        this.setMinimumSize(new Dimension(900, 400));
 
 
         btnGetReport.addActionListener(e -> {
             String fromDate = tfFromDate.getText();
             String toDate = tfToDate.getText();
-            viewModel.getReport(fromDate,toDate);
+            viewModel.getReport(fromDate, toDate);
         });
+        comboBoxCurrencies.addActionListener(cbActionListener);
+        panelSouth.add(labelSumOfExpenses);
+        panelSouth.add(labelExpensesTotal);
+        panelSouth.add(comboBoxCurrencies);
+        panelSouth.add(btnSaveReportAsPdf);
 
         btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
     }
 
     private String[][] saveDataAssStrDoubleArr() {
-        String [][] data = new String[expensesList.size()][];
+        String[][] data = new String[expensesList.size()][];
 
         int i = 0;
-        for(Expense expense : expensesList)
-        {
+        for (Expense expense : expensesList) {
             data[i] = new String[5];
             data[i][0] = expense.getCategoryName();
             data[i][1] = expense.getCurrency();
             data[i][2] = String.valueOf(expense.getCost());
             data[i][3] = expense.getInfo();
             data[i][4] = expense.getDateCreated().toString();
+
+            i++;
         }
 
         return data;
@@ -196,7 +183,7 @@ public class ReportsScreen extends BaseScreen {
     private void DisplayExpense(List<Expense> expenseList) {
         DefaultTableModel aModel = new DefaultTableModel() {
 
-            //setting the jtable read only
+            //setting the jTable read only
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -221,11 +208,12 @@ public class ReportsScreen extends BaseScreen {
             return;
         }
 
-        Object[] objects = new Object[8];
+        Object[] objects = new Object[7];
         ListIterator<Expense> expenseListIterator = expenseList.listIterator();
         int i = 1;
 
-        //populating the tablemodel
+        totalSum = 0;
+        //populating the tableModel
         while (expenseListIterator.hasNext()) {
             Expense expense = expenseListIterator.next();
             String categoryName = expense.getCategoryName();
@@ -241,70 +229,64 @@ public class ReportsScreen extends BaseScreen {
             objects[5] = expense.getInfo();
             objects[6] = expense.getDateCreated();
 
-            totalSum+=cost*calcCurrencyRate(curr);
+            totalSum += cost * calcCurrencyRate(curr);
             aModel.addRow(objects);
         }
-        labelExpensesTotal.setText(String.format("%.2f",totalSum));
-        //binding the jtable to the model
+        labelExpensesTotal.setText(String.format("%.2f", totalSum));
+        //binding the jTable to the model
         this.tableExpenses.setModel(aModel);
         scrollPane.setViewportView(tableExpenses);
     }
 
     private double calcCurrencyRate(String currency) {
-        switch (comboBoxCurrencies.getSelectedItem().toString()){
+        switch (Objects.requireNonNull(comboBoxCurrencies.getSelectedItem()).toString()) {
             case "ILS":
                 return Helper.currencies.get(currency);
             case "USD":
-                if(currency.equals("USD")) return 1.0;
-                else if(currency.equals("ILS")) return 0.32;
+                if (currency.equals("USD")) return 1.0;
+                else if (currency.equals("ILS")) return 0.32;
                 else return 1.13;
             case "EURO":
-                if(currency.equals("EURO")) return 1.0;
-                else if(currency.equals("USD")) return 0.89;
+                if (currency.equals("EURO")) return 1.0;
+                else if (currency.equals("USD")) return 0.89;
                 else return 0.28;
 
         }
         return 0;
     }
 
-    private void setLabelSumCurrencies(String selectedCurrency){
-        switch (currentCurrency){
-            case "ILS":
-                if(selectedCurrency.equals("USD")){
-                    totalSum = 0.321485*totalSum;
-                    labelExpensesTotal.setText(String.format("%.2f",totalSum));
+    private void setLabelSumCurrencies(String selectedCurrency) {
+        switch (currentCurrency) {
+            case "ILS" -> {
+                if (selectedCurrency.equals("USD")) {
+                    totalSum = 0.321485 * totalSum;
 
+                } else {
+                    totalSum = 0.28466 * totalSum;
                 }
-                else {
-                    totalSum = 0.28466*totalSum;
-                    labelExpensesTotal.setText(String.format("%.2f",totalSum));
+                labelExpensesTotal.setText(String.format("%.2f", totalSum));
+            }
+            case "USD" -> {
+                if (selectedCurrency.equals("ILS")) {
+                    totalSum = 3.10601 * totalSum;
+                } else {
+                    totalSum = 0.8851454 * totalSum;
                 }
-                break;
-            case "USD":
-                if(selectedCurrency.equals("ILS")){
-                    totalSum = 3.10601*totalSum;
-                    labelExpensesTotal.setText(String.format("%.2f",totalSum));
+                labelExpensesTotal.setText(String.format("%.2f", totalSum));
+            }
+            case "EURO" -> {
+                if (selectedCurrency.equals("ILS")) {
+                    totalSum = 3.5140201 * totalSum;
+                } else {
+                    totalSum = 1.1298116 * totalSum;
                 }
-                else {
-                    totalSum = 0.8851454*totalSum;
-                    labelExpensesTotal.setText(String.format("%.2f",totalSum));
-                }
-                break;
-            case "EURO":
-                if(selectedCurrency.equals("ILS")){
-                    totalSum = 3.5140201*totalSum;
-                    labelExpensesTotal.setText(String.format("%.2f",totalSum));
-                }
-                else {
-                    totalSum = 1.1298116*totalSum;
-                    labelExpensesTotal.setText(String.format("%.2f",totalSum));
-                }
-                break;
+                labelExpensesTotal.setText(String.format("%.2f", totalSum));
+            }
         }
     }
 
-    private void setComboBoxCurrencies(){
-        for(Map.Entry set:Helper.currencies.entrySet()){
+    private void setComboBoxCurrencies() {
+        for (Map.Entry set : Helper.currencies.entrySet()) {
             comboBoxCurrencies.addItem(set.getKey());
         }
     }

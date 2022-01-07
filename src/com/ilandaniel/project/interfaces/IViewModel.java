@@ -22,7 +22,6 @@ public interface IViewModel {
     //Home methods
     void initTableExpenses(int id);
 
-    void getCategoryNameById(int id);
 
     //Login methods
     void loginUser(AccountLoginDTO client);
@@ -35,9 +34,9 @@ public interface IViewModel {
     //Register methods
     void createAccount(AccountRegisterDTO client);
 
-    void getReport(String fromDate,String toDate);
+    void getReport(String fromDate, String toDate);
 
     void logout();
 
-    public void deleteSelected(int id) ;
+    void deleteSelected(int id);
 }

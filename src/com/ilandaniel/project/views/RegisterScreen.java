@@ -5,8 +5,6 @@ import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class RegisterScreen extends BaseScreen {
     private JLabel labelTitle, labelUsername, labelPassword, labelRePassword;
@@ -83,23 +81,15 @@ public class RegisterScreen extends BaseScreen {
         setLocationRelativeTo(null);
         this.pack();
 
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("Login");
-            }
-        });
+        btnLogin.addActionListener(e -> viewModel.showScreen("Login"));
 
-        btnRegister.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username, password, rePassword;
-                username = textFieldUsername.getText();
-                password = String.valueOf(textFieldPassword.getPassword());
-                rePassword = String.valueOf(textFieldRePassword.getPassword());
-                AccountRegisterDTO accountRegisterDTO = new AccountRegisterDTO(username, password, rePassword);
-                viewModel.createAccount(accountRegisterDTO);
-            }
+        btnRegister.addActionListener(e -> {
+            String username, password, rePassword;
+            username = textFieldUsername.getText();
+            password = String.valueOf(textFieldPassword.getPassword());
+            rePassword = String.valueOf(textFieldRePassword.getPassword());
+            AccountRegisterDTO accountRegisterDTO = new AccountRegisterDTO(username, password, rePassword);
+            viewModel.createAccount(accountRegisterDTO);
         });
     }
 
@@ -107,13 +97,6 @@ public class RegisterScreen extends BaseScreen {
     public void setViewModel(IViewModel viewModel) {
         this.viewModel = viewModel;
     }
-
-
-    public void showMessage(String message) {
-        JOptionPane.showMessageDialog(null, message, "InfoBox: " + "Errors", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-
 }
 
 

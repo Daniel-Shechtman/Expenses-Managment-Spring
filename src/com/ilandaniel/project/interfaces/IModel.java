@@ -20,7 +20,6 @@ public interface IModel {
     //Home methods
     List<Expense> getAllExpenses(int id) throws ProjectException;
 
-    String getCategoryNameById(int id) throws ProjectException;
 
     //Login methods
     String loginUser(AccountLoginDTO client) throws ProjectException;
@@ -33,8 +32,8 @@ public interface IModel {
     //Register methods
     String createAccount(AccountRegisterDTO client) throws ProjectException;
 
-    List<Expense> getReport(String fromDate,String toDate) throws  ProjectException;
+    List<Expense> getReport(String fromDate, String toDate) throws ProjectException;
 
-    public void deleteSelected(int id) throws ProjectException;
+    void deleteSelected(int id) throws ProjectException;
 
 }

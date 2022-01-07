@@ -22,8 +22,6 @@ public interface IView {
 
     void loadTableExpenses(List<Expense> expenses);
 
-    void setCategoryName(String name);
-
     void loadCategoriesNames(List<String> names);
 
 

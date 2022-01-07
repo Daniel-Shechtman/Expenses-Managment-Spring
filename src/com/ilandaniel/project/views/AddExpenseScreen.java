@@ -6,10 +6,9 @@ import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AddExpenseScreen extends BaseScreen {
     private JLabel labelTitle, labelCategories, labelCost, labelCurrency, labelInfo;
@@ -37,7 +36,7 @@ public class AddExpenseScreen extends BaseScreen {
         comboBoxCategories = new JComboBox<>();
         comboBoxCurrencies = new JComboBox<>();
         textFieldCost = new JTextField(15);
-        textAreaInfo = new JTextArea(3,15);
+        textAreaInfo = new JTextArea(3, 15);
         textAreaInfo.setLineWrap(true);
         constraints = new GridBagConstraints();
 
@@ -105,25 +104,16 @@ public class AddExpenseScreen extends BaseScreen {
         this.pack();
 
 
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("Home");
-            }
-        });
+        btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
 
-        btnAddExpense.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Integer categoryId = -1;
-                String categoryName = comboBoxCategories.getSelectedItem().toString();
-                String currency = comboBoxCurrencies.getSelectedItem().toString();
-                String cost = textFieldCost.getText();
-                String info = textAreaInfo.getText();
-                viewModel.getCategoryIdByName(new ExpenseDTO(-1, cost, currency, info, categoryName));
+        btnAddExpense.addActionListener(e -> {
+            String categoryName = Objects.requireNonNull(comboBoxCategories.getSelectedItem()).toString();
+            String currency = Objects.requireNonNull(comboBoxCurrencies.getSelectedItem()).toString();
+            String cost = textFieldCost.getText();
+            String info = textAreaInfo.getText();
+            viewModel.getCategoryIdByName(new ExpenseDTO(-1, cost, currency, info, categoryName));
 
 
-            }
         });
 
     }
@@ -136,12 +126,6 @@ public class AddExpenseScreen extends BaseScreen {
 
     }
 
-
-    public void showMessage(String msg) {
-        Helper.showMessage("Categories", msg);
-    }
-
-
     public void loadCategoriesNamesIntoComboBox(List<String> names) {
         for (String s : names) {
             comboBoxCategories.addItem(s);
@@ -149,8 +133,8 @@ public class AddExpenseScreen extends BaseScreen {
     }
 
     public void setCurrencies() {
-        for(Map.Entry set:Helper.currencies.entrySet()){
+        for (Map.Entry set : Helper.currencies.entrySet()) {
             comboBoxCurrencies.addItem(set.getKey().toString());
-    }
+        }
     }
 }

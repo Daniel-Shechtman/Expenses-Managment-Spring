@@ -6,8 +6,8 @@ public class AccountLoginDTO {
 
 
     public AccountLoginDTO(String username, String password) {
-        this.username = username;
-        this.password = password;
+        setUsername(username);
+        setPassword(password);
     }
 
     public String getUsername() {

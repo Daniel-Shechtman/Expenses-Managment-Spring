@@ -11,15 +11,14 @@ public class ExpenseValidator implements IValidator {
 
     /**
      * validate Expense by checking:
-     * 1) its not null or there are empty fields.
+     * 1) it's not null or there are empty fields.
      * 2) cost is above 0.
      * 3) valid category id by checking it in the DB.
      */
     @Override
     public String validate(Object object) {
-        CategoryModel categoryModel = new CategoryModel();
 
-        if (object != null && object instanceof ExpenseDTO) {
+        if (object instanceof ExpenseDTO) {
             ExpenseDTO expense = (ExpenseDTO) object;
             StringBuilder errorsBuilder = new StringBuilder();
 

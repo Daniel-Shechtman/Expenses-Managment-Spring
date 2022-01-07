@@ -1,15 +1,13 @@
 package com.ilandaniel.project.views;
 
 import com.ilandaniel.project.classes.Category;
-import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CategoryScreen extends BaseScreen {
 
@@ -88,27 +86,16 @@ public class CategoryScreen extends BaseScreen {
         this.pack();
 
 
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("Home");
-            }
+        btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
+
+        btnAddCategory.addActionListener(e -> {
+            String name = textFieldCategory.getText();
+            viewModel.addCategory(new Category(name));
         });
 
-        btnAddCategory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = textFieldCategory.getText();
-                viewModel.addCategory(new Category("Test 1", name));
-            }
-        });
-
-        btnDeleteCategory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String categoryName = comboBoxCategories.getSelectedItem().toString();
-                viewModel.deleteCategory(categoryName);
-            }
+        btnDeleteCategory.addActionListener(e -> {
+            String categoryName = Objects.requireNonNull(comboBoxCategories.getSelectedItem()).toString();
+            viewModel.deleteCategory(categoryName);
         });
     }
 
@@ -118,13 +105,8 @@ public class CategoryScreen extends BaseScreen {
 
     }
 
-
-    public void showMessage(String msg) {
-        Helper.showMessage("Categories", msg);
-    }
-
-
     public void addCategory(String category) {
+        textFieldCategory.setText("");
         categoriesList.add(category);
         updateCategoriesList();
     }
@@ -134,10 +116,6 @@ public class CategoryScreen extends BaseScreen {
             comboBoxCategories.addItem(s);
             categoriesList.add(s);
         }
-    }
-
-    public void updateCategoriesNamesList(String categoryName) {
-
     }
 
     public void updateCategoriesList() {

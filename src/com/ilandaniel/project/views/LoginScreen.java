@@ -5,8 +5,6 @@ import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginScreen extends BaseScreen {
     private JLabel labelTitle, labelUsername, labelPassword;
@@ -71,24 +69,16 @@ public class LoginScreen extends BaseScreen {
         setLocationRelativeTo(null);
         this.pack();
 
-        btnRegister.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewModel.showScreen("Register");
-            }
-        });
+        btnRegister.addActionListener(e -> viewModel.showScreen("Register"));
 
 
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username, password;
-                username = textFieldUsername.getText();
-                password = String.valueOf(textFieldPassword.getPassword());
-                AccountLoginDTO accountLoginDTO = new AccountLoginDTO(username, password);
-                viewModel.loginUser(accountLoginDTO);
+        btnLogin.addActionListener(e -> {
+            String username, password;
+            username = textFieldUsername.getText();
+            password = String.valueOf(textFieldPassword.getPassword());
+            AccountLoginDTO accountLoginDTO = new AccountLoginDTO(username, password);
+            viewModel.loginUser(accountLoginDTO);
 
-            }
         });
     }
 
@@ -98,9 +88,6 @@ public class LoginScreen extends BaseScreen {
         this.viewModel = viewModel;
     }
 
-    public void showHomeScreen() {
-        viewModel.showScreen("Home");
-    }
 
 }
 

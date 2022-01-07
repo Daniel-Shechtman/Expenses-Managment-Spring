@@ -56,8 +56,8 @@ public class DataBase {
                 return rs.getInt("id");
             }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
 
         return -1;

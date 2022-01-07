@@ -6,17 +6,18 @@ import com.ilandaniel.project.dtos.AccountLoginDTO;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.dtos.ExpenseDTO;
 import com.ilandaniel.project.exceptions.ProjectException;
-import com.ilandaniel.project.helpers.DataBase;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IModel;
 import com.ilandaniel.project.validators.ReportsValidator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Model implements IModel {
 
     @Override
     public String addCategory(Category category) throws ProjectException {
-        String errors = "";
+        String errors;
         errors = categoryModel.addCategory(category);
 
         return errors;
@@ -36,7 +37,7 @@ public class Model implements IModel {
 
     @Override
     public boolean deleteCategory(String categoryName) throws ProjectException {
-        boolean isDeleted = false;
+        boolean isDeleted;
         isDeleted = categoryModel.deleteCategory(categoryName);
 
         return isDeleted;
@@ -44,7 +45,7 @@ public class Model implements IModel {
 
     @Override
     public List<String> getAllCategories() throws ProjectException {
-        List<String> categoriesNames = new ArrayList<>();
+        List<String> categoriesNames;
         categoriesNames = categoryModel.getAllCategories();
 
         return categoriesNames;
@@ -52,23 +53,15 @@ public class Model implements IModel {
 
     @Override
     public List<Expense> getAllExpenses(int id) throws ProjectException {
-        List<Expense> list = new ArrayList<>();
+        List<Expense> list;
         list = expenseModel.getAllExpenses(Helper.loggedInAccount.getId());
 
         return list;
     }
 
     @Override
-    public String getCategoryNameById(int id) throws ProjectException {
-        String catName = "";
-        catName = categoryModel.getCategoryNameById(id);
-
-        return catName;
-    }
-
-    @Override
     public String loginUser(AccountLoginDTO accountLoginDTO) throws ProjectException {
-        String errors = "";
+        String errors;
 
         errors = accountModel.loginUser(accountLoginDTO);
 
@@ -82,7 +75,7 @@ public class Model implements IModel {
 
     @Override
     public int getCategoryIdByName(String categoryName) throws ProjectException {
-        int catId = -1;
+        int catId;
 
         catId = categoryModel.getCategoryIdByName(categoryName);
 
@@ -91,7 +84,7 @@ public class Model implements IModel {
 
     @Override
     public String createAccount(AccountRegisterDTO accountRegisterDTO) throws ProjectException {
-        String errors = "";
+        String errors;
 
         errors = accountModel.createAccount(accountRegisterDTO);
 
@@ -100,71 +93,49 @@ public class Model implements IModel {
 
     @Override
     public List<Expense> getReport(String fromDateStr, String toDateStr) throws ProjectException {
-        String pattern = "dd-MM-yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        List<Expense> filterredExpenses = new ArrayList<>();
+        List<Expense> expenses = new ArrayList<>();
         ReportsValidator validator = new ReportsValidator();
         String errorFrom = validator.validate(fromDateStr);
         String errorTo = validator.validate(toDateStr);
-        if(!errorFrom.isEmpty()){
+        if (!errorFrom.isEmpty()) {
             throw new ProjectException("From date field errors:\n" + errorFrom);
-        }
-        else if(!errorTo.isEmpty()){
+        } else if (!errorTo.isEmpty()) {
             throw new ProjectException("To date field errors:\n" + errorTo);
-        }
-        else {
-
-            try (Connection connection = DataBase.getConnection())
-            {
-                Date fromDate = simpleDateFormat.parse(fromDateStr);
-                Date toDate = simpleDateFormat.parse(toDateStr);
-
-                long fromDateL = fromDate.getTime();
-                long toDateL = toDate.getTime();
-                String query = "SELECT * FROM expenses WHERE account_id = " + Helper.loggedInAccount.getId() + " AND date_created >= " + fromDateL + " AND date_created <= " + toDateL;
-                ResultSet rs = DataBase.selectAll(connection, query);
-
-                if(rs != null)
-                {
-                    do
-                    {
+        } else {
+            try {
+                HttpClient httpClient = HttpClient.newBuilder().build();
+                HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/reports/getReport/" + fromDateStr + "/" +
+                                toDateStr + "/" +
+                                Helper.loggedInAccount.getId()))
+                        .GET().build();
+                HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                if (httpResponse.statusCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    throw new ProjectException(httpResponse.body());
+                } else {
+                    JSONArray array = new JSONArray(httpResponse.body());
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
                         Expense expense = new Expense();
-                        expense.setId(rs.getInt("id"));
-                        expense.setInfo(rs.getString("info"));
-                        expense.setCost(rs.getFloat("cost"));
-                        expense.setCurrency(rs.getString("currency"));
-                        expense.setCategoryId(rs.getInt("category_id"));
-                        expense.setDateCreated(new Date(rs.getLong("date_created")));
-                        expense.setCategoryName(categoryModel.getCategoryNameById(expense.getCategoryId()));
-                        filterredExpenses.add(expense);
+                        expense.setId(object.getInt("id"));
+                        expense.setInfo(object.getString("info"));
+                        expense.setCost(object.getFloat("cost"));
+                        expense.setCurrency(object.getString("currency"));
+                        expense.setCategoryId(object.getInt("categoryId"));
+                        expense.setDateCreated(new Date(object.getLong("dateCreated")));
+                        expense.setCategoryName(object.getString("categoryName"));
+                        expenses.add(expense);
                     }
-                    while (rs.next());
                 }
-                else {
-                    throw new ProjectException("there are no expenses matches your dates");
-                }
-
-
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (IOException | InterruptedException e) {
+                throw new ProjectException(e.getMessage());
             }
         }
 
-        return filterredExpenses;
+        return expenses;
     }
 
     @Override
     public void deleteSelected(int id) throws ProjectException {
-        try (Connection connection = DataBase.getConnection()){
-            String query = "DELETE FROM expenses WHERE id =?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        expenseModel.deleteSelectedExpenseById(id);
     }
 }

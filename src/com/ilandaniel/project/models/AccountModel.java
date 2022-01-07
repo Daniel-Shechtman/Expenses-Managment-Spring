@@ -3,9 +3,6 @@ package com.ilandaniel.project.models;
 import com.ilandaniel.project.dtos.AccountLoginDTO;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.exceptions.ProjectException;
-import com.ilandaniel.project.interfaces.IValidator;
-import com.ilandaniel.project.validators.LoginValidator;
-import com.ilandaniel.project.validators.RegisterValidator;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,14 +12,6 @@ import java.net.http.HttpResponse;
 
 public class AccountModel {
 
-    private final IValidator loginValidator;
-    private final IValidator registerValidator;
-
-    public AccountModel() {
-        loginValidator = new LoginValidator();
-        registerValidator = new RegisterValidator();
-    }
-
     /**
      * method to log in into the app.
      * checking if the data is valid in the DB.
@@ -30,18 +19,16 @@ public class AccountModel {
      * see validators/LoginValidator.
      */
     public String loginUser(AccountLoginDTO client) throws ProjectException {
-        String errors = new String();
+        String errors;
 
         try {
             HttpClient httpClient = HttpClient.newBuilder().build();
             HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/login/" + client.getUsername() + "/" + client.getPassword())).GET().build();
-            HttpResponse httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            errors = httpResponse.body().toString();
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            errors = httpResponse.body();
 
 
-        } catch (IOException e) {
-            throw new ProjectException(e.getMessage());
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new ProjectException(e.getMessage());
         }
 
@@ -55,20 +42,18 @@ public class AccountModel {
      * see validators/RegisterValidator.
      */
     public String createAccount(AccountRegisterDTO client) throws ProjectException {
-        String errors = new String();
+        String errors;
 
         try {
             HttpClient httpClient = HttpClient.newBuilder().build();
             HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/createAccount/" + client.getUsername() + "/" + client.getPassword())).GET().build();
-            HttpResponse httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            errors = httpResponse.body().toString();
+            errors = httpResponse.body();
 
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             throw new ProjectException(e.getMessage());
-        } catch (InterruptedException e) {
-            throw  new ProjectException(e.getMessage());
         }
 
 

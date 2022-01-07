@@ -4,6 +4,8 @@ public class ExpenseDTO {
     private int categoryId;
     private String categoryName;
     private String cost;
+
+
     private String currency;
     private String info;
 
@@ -36,7 +38,7 @@ public class ExpenseDTO {
     }
 
     public void setCurrency(String currencyName) {
-        this.currency = currencyName;
+        currency = currencyName;
     }
 
     public String getInfo() {

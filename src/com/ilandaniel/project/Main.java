@@ -14,12 +14,9 @@ public class Main {
         IModel model = new Model();
         IViewModel viewModel = new ViewModel();
         IView view = new MainView();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                view.init();
-                view.start();
-            }
+        SwingUtilities.invokeLater(() -> {
+            view.init();
+            view.start();
         });
         view.setViewModel(viewModel);
         viewModel.setView(view);

@@ -2,12 +2,18 @@ package com.ilandaniel.project.models;
 
 import com.ilandaniel.project.classes.Category;
 import com.ilandaniel.project.exceptions.ProjectException;
-import com.ilandaniel.project.helpers.DataBase;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IValidator;
 import com.ilandaniel.project.validators.CategoryValidator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.sql.*;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,87 +30,40 @@ public class CategoryModel {
      * getting category from DB by the category_id.
      */
     public static Category getCategoryById(int id) throws ProjectException {
-        try (Connection connection = DataBase.getConnection()) {
+        Category category = null;
+        try {
+            category = new Category();
+            HttpClient httpClient = HttpClient.newBuilder().build();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/category/getCategoryById/" + id)).GET().build();
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            String query = "SELECT * FROM categories WHERE id = '" + id + "'";
-            ResultSet rs = DataBase.selectAll(connection, query);
-
-            if (rs != null) {
-                Category category = new Category();
-                category.setName(rs.getString("name"));
-                category.setIcon(rs.getString("icon_path"));
-                category.setId(rs.getInt("id"));
-
-                return category;
-            }
-
-
-        } catch (SQLException throwables) {
-            throw new ProjectException("DBmodel: getCategory error. " + throwables.getMessage());
+            JSONObject jsonObject = new JSONObject(httpResponse.body());
+            category.setName(jsonObject.getString("name"));
+            category.setId(jsonObject.getInt("id"));
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
 
-        return null;
+        return category;
     }
 
-
-    public String getCategoryNameById(int id) throws ProjectException {
-        if (id > 0) {
-            try (Connection connection = DataBase.getConnection()) {
-
-                String query = "SELECT name FROM categories WHERE id = " + id;
-                ResultSet rs = DataBase.selectAll(connection, query);
-
-                if (rs != null) {
-                    return rs.getString("name");
-                }
-
-            } catch (SQLException throwables) {
-                throw new ProjectException(throwables.getMessage());
-            }
-
-        }
-
-        return "";
-    }
 
     public int getCategoryIdByName(String categoryName) throws ProjectException {
-        if (categoryName != null && !categoryName.isEmpty()) {
-            try (Connection connection = DataBase.getConnection()) {
-                String query = "SELECT id FROM categories WHERE name = '" + categoryName + "'";
-                ResultSet rs = DataBase.selectAll(connection, query);
-                if (rs != null) {
-                    return rs.getInt("id");
-                }
-            } catch (SQLException throwables) {
-                throw new ProjectException(throwables.getMessage());
-            }
-        }
-
-        return 0;
-    }
-
-    public static Category getCategoryByName(String categoryName) throws ProjectException {
-        try (Connection connection = DataBase.getConnection()) {
-
-            String query = "SELECT * FROM categories WHERE name = '" + categoryName + "'";
-            ResultSet rs = DataBase.selectAll(connection, query);
-
-            if (rs != null) {
-                Category category = new Category();
-                category.setName(rs.getString("name"));
-                category.setIcon(rs.getString("icon_path"));
-                category.setId(rs.getInt("id"));
-                category.setAccountId(rs.getInt("account_id"));
-
-                return category;
+        HttpClient httpClient = HttpClient.newBuilder().build();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/category/getCategoryIdByName/" + categoryName)).GET().build();
+        try {
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            if (httpResponse.statusCode() == HttpURLConnection.HTTP_OK) {
+                return Integer.parseInt(httpResponse.body());
+            } else {
+                throw new ProjectException(httpResponse.body());
             }
 
-
-        } catch (SQLException throwables) {
-            throw new ProjectException("DBmodel: getCategory error. " + throwables.getMessage());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
 
-        return null;
+        return -1;
     }
 
     /**
@@ -112,18 +71,23 @@ public class CategoryModel {
      */
     public String addCategory(Category category) throws ProjectException {
         String errors = validator.validate(category);
-        String path = Helper.getIconPathByCategoryName(category.getName());
         if (errors.isEmpty()) {
-            try (Connection connection = DataBase.getConnection()) {
-                String query = "INSERT INTO categories (name,icon_path,account_id) VALUES(?,?,?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1, category.getName());
-                preparedStatement.setString(2, path);
-                preparedStatement.setInt(3, Helper.loggedInAccount.getId());
-                preparedStatement.execute();
+            JSONObject jsonObject = new JSONObject(category);
+            jsonObject.put("current_account_id", Helper.loggedInAccount.getId());
+            HttpClient httpClient = HttpClient.newBuilder().build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/category/addCategory"))
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
+                    .build();
+            try {
+                HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                if (httpResponse.statusCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+                    throw new ProjectException(httpResponse.body());
+                }
+                errors += httpResponse.body();
 
-            } catch (SQLException throwables) {
-                throw new ProjectException("DBmodel: addCategory error. " + throwables.getMessage());
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
         }
         return errors;
@@ -134,43 +98,38 @@ public class CategoryModel {
      * delete category from the DB
      */
     public boolean deleteCategory(String categoryName) throws ProjectException {
-        Category category = getCategoryByName(categoryName);
-        if (category != null && category.getAccountId() != 0) {
-            try (Connection connection = DataBase.getConnection()) {
-                String query = "DELETE FROM categories WHERE name=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1, categoryName);
-                preparedStatement.execute();
+        HttpClient httpClient = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/category/deleteCategory/" + categoryName + "/" + Helper.loggedInAccount.getId()))
+                .DELETE()
+                .build();
 
-                query = "DELETE FROM expenses WHERE category_id = " + category.getId() + " AND account_id = " + Helper.loggedInAccount.getId();
-                Statement statement = connection.createStatement();
-                statement.execute(query);
-
-                return true;
-            } catch (SQLException throwables) {
-                throw new ProjectException("DBmodel: deleteCategory error. " + throwables.getMessage());
+        try {
+            HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (httpResponse.statusCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                throw new ProjectException(httpResponse.body());
+            } else if (httpResponse.statusCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+                return false;
             }
-        } else if (category.getAccountId() == 0) {
-            throw new ProjectException("You cant delete root category");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-        return false;
+        return true;
     }
 
-    public List<String> getAllCategories() throws ProjectException {
-        //String errors = validator.validate() we need to add
+    public List<String> getAllCategories() {
         List<String> list = new ArrayList<>();
-        try (Connection connection = DataBase.getConnection()) {
-            String query = "SELECT name FROM categories WHERE account_id=" + Helper.loggedInAccount.getId() + " OR account_id=0";
-            ResultSet rs = DataBase.selectAll(connection, query);
-            if (rs != null) {
-                do {
-                    list.add(rs.getString("name"));
-                } while (rs.next());
+        HttpClient httpClient = HttpClient.newBuilder().build();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/category/getAllCategories/" + Helper.loggedInAccount.getId())).GET().build();
+        try {
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            JSONArray jsonArray = new JSONArray(httpResponse.body());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                list.add(jsonArray.getString(i));
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-
         return list;
     }
 

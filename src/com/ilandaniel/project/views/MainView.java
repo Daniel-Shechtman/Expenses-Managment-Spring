@@ -41,16 +41,13 @@ public class MainView implements IView {
 
             currentScreen = loginScreen;
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    loginScreen = new LoginScreen();
-                    loginScreen.setViewModel(viewModel);
-                    loginScreen.init();
-                    loginScreen.start();
+            SwingUtilities.invokeLater(() -> {
+                loginScreen = new LoginScreen();
+                loginScreen.setViewModel(viewModel);
+                loginScreen.init();
+                loginScreen.start();
 
-                    currentScreen = loginScreen;
-                }
+                currentScreen = loginScreen;
             });
 
         }
@@ -66,12 +63,7 @@ public class MainView implements IView {
         if (SwingUtilities.isEventDispatchThread()) {
             Helper.showMessage(title, msg);
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    Helper.showMessage(title, msg);
-                }
-            });
+            SwingUtilities.invokeLater(() -> Helper.showMessage(title, msg));
         }
     }
 
@@ -80,59 +72,48 @@ public class MainView implements IView {
         currentScreen.dispose2();
 
         switch (name) {
-            case "Home":
+            case "Home" -> {
                 homeScreen = new HomeScreen();
                 homeScreen.setViewModel(viewModel);
                 homeScreen.init();
                 homeScreen.start();
-
                 currentScreen = homeScreen;
-                break;
-
-            case "Category":
+            }
+            case "Category" -> {
                 categoryScreen = new CategoryScreen();
                 categoryScreen.setViewModel(viewModel);
                 categoryScreen.init();
                 categoryScreen.start();
-
                 currentScreen = categoryScreen;
-                break;
-
-            case "AddExpense":
+            }
+            case "AddExpense" -> {
                 expenseScreen = new AddExpenseScreen();
                 expenseScreen.setViewModel(viewModel);
                 expenseScreen.init();
                 expenseScreen.start();
-
                 currentScreen = expenseScreen;
-                break;
-
-            case "Login":
+            }
+            case "Login" -> {
                 loginScreen = new LoginScreen();
                 loginScreen.setViewModel(viewModel);
                 loginScreen.init();
                 loginScreen.start();
-
                 currentScreen = loginScreen;
-                break;
-
-            case "Register":
+            }
+            case "Register" -> {
                 registerScreen = new RegisterScreen();
                 registerScreen.setViewModel(viewModel);
                 registerScreen.init();
                 registerScreen.start();
-
                 currentScreen = registerScreen;
-                break;
-
-            case "Reports":
+            }
+            case "Reports" -> {
                 reportsScreen = new ReportsScreen();
                 reportsScreen.setViewModel(viewModel);
                 reportsScreen.init();
                 reportsScreen.start();
-
                 currentScreen = reportsScreen;
-                break;
+            }
         }
     }
 
@@ -141,12 +122,7 @@ public class MainView implements IView {
         if (SwingUtilities.isEventDispatchThread()) {
             categoryScreen.deleteCategory(categoryName);
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    categoryScreen.deleteCategory(categoryName);
-                }
-            });
+            SwingUtilities.invokeLater(() -> categoryScreen.deleteCategory(categoryName));
         }
 
     }
@@ -156,12 +132,7 @@ public class MainView implements IView {
         if (SwingUtilities.isEventDispatchThread()) {
             categoryScreen.addCategory(categoryName);
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    categoryScreen.addCategory(categoryName);
-                }
-            });
+            SwingUtilities.invokeLater(() -> categoryScreen.addCategory(categoryName));
         }
 
     }
@@ -172,26 +143,7 @@ public class MainView implements IView {
         if (SwingUtilities.isEventDispatchThread()) {
             homeScreen.loadTableExpenses(expenses);
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    homeScreen.loadTableExpenses(expenses);
-                }
-            });
-        }
-
-    }
-
-    public void setCategoryName(String name) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            homeScreen.setCategoryName(name);
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    homeScreen.setCategoryName(name);
-                }
-            });
+            SwingUtilities.invokeLater(() -> homeScreen.loadTableExpenses(expenses));
         }
 
     }
@@ -204,14 +156,11 @@ public class MainView implements IView {
                 categoryScreen.loadCategoriesNamesIntoComboBox(names);
             }
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (currentScreen == expenseScreen) {
-                        expenseScreen.loadCategoriesNamesIntoComboBox(names);
-                    } else {
-                        categoryScreen.loadCategoriesNamesIntoComboBox(names);
-                    }
+            SwingUtilities.invokeLater(() -> {
+                if (currentScreen == expenseScreen) {
+                    expenseScreen.loadCategoriesNamesIntoComboBox(names);
+                } else {
+                    categoryScreen.loadCategoriesNamesIntoComboBox(names);
                 }
             });
         }
@@ -226,12 +175,9 @@ public class MainView implements IView {
                 reportsScreen.loadTableExpenses(expensesList);
             }
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (currentScreen == reportsScreen) {
-                        reportsScreen.loadTableExpenses(expensesList);
-                    }
+            SwingUtilities.invokeLater(() -> {
+                if (currentScreen == reportsScreen) {
+                    reportsScreen.loadTableExpenses(expensesList);
                 }
             });
         }

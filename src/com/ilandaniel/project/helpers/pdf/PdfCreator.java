@@ -25,9 +25,9 @@ public class PdfCreator {
     private static final float CELL_MARGIN = 2;
 
 
-    public void createPdfFile(String filePath,String[][] data)
+    public void createPdfFile(String filePath,String[][] dataArray)
     {
-        data = data;
+        data = dataArray;
 
         try {
             new PDFTableGenerator().generatePDF(createContent(), filePath);
