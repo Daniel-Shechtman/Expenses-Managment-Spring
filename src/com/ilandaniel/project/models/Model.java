@@ -138,4 +138,9 @@ public class Model implements IModel {
     public void deleteSelected(int id) throws ProjectException {
         expenseModel.deleteSelectedExpenseById(id);
     }
+
+    @Override
+    public int getAccountIdByUsername(String userName) throws ProjectException {
+        return accountModel.getAccountIdByUsername(userName);
+    }
 }

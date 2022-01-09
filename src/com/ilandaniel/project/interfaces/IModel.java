@@ -36,4 +36,6 @@ public interface IModel {
 
     void deleteSelected(int id) throws ProjectException;
 
+    int getAccountIdByUsername(String userName) throws ProjectException;
+
 }

@@ -174,7 +174,7 @@ public class HomeScreen extends BaseScreen {
         scrollPane.setViewportView(tableExpense);
     }
 
-    class ButtonRenderer extends JButton implements TableCellRenderer {
+    static class ButtonRenderer extends JButton implements TableCellRenderer {
 
         //CONSTRUCTOR
         public ButtonRenderer() {

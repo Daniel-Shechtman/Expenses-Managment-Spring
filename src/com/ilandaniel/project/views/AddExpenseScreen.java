@@ -133,8 +133,8 @@ public class AddExpenseScreen extends BaseScreen {
     }
 
     public void setCurrencies() {
-        for (Map.Entry set : Helper.currencies.entrySet()) {
-            comboBoxCurrencies.addItem(set.getKey().toString());
+        for (Map.Entry<String, Float> set : Helper.currencies.entrySet()) {
+            comboBoxCurrencies.addItem(set.getKey());
         }
     }
 }

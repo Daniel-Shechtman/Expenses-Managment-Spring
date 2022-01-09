@@ -6,8 +6,7 @@ import com.ilandaniel.project.interfaces.IValidator;
 public class CategoryValidator implements IValidator {
     @Override
     public String validate(Object object) {
-        if (object instanceof Category) {
-            Category category = (Category) object;
+        if (object instanceof Category category) {
             StringBuilder errorsBuilder = new StringBuilder();
 
             if (category.getName() != null && category.getName().isEmpty()) {

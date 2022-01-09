@@ -5,6 +5,7 @@ import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.exceptions.ProjectException;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -58,5 +59,21 @@ public class AccountModel {
 
 
         return errors;
+    }
+
+    public int getAccountIdByUsername(String username) throws ProjectException {
+        int id = -1;
+        try {
+            HttpClient httpClient = HttpClient.newBuilder().build();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/getAccountId/" + username)).GET().build();
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            if (httpResponse.statusCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                throw new ProjectException(httpResponse.body());
+            }
+            id = Integer.parseInt(httpResponse.body());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 }

@@ -18,8 +18,7 @@ public class ExpenseValidator implements IValidator {
     @Override
     public String validate(Object object) {
 
-        if (object instanceof ExpenseDTO) {
-            ExpenseDTO expense = (ExpenseDTO) object;
+        if (object instanceof ExpenseDTO expense) {
             StringBuilder errorsBuilder = new StringBuilder();
 
             try {

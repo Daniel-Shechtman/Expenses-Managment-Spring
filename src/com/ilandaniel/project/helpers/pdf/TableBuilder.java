@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TableBuilder {
 
-    private Table table = new Table();
+    private final Table table = new Table();
 
     public TableBuilder setHeight(float height) {
         table.setHeight(height);

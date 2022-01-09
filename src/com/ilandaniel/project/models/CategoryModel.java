@@ -117,7 +117,7 @@ public class CategoryModel {
         return true;
     }
 
-    public List<String> getAllCategories() {
+    public List<String> getAllCategories() throws ProjectException {
         List<String> list = new ArrayList<>();
         HttpClient httpClient = HttpClient.newBuilder().build();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/category/getAllCategories/" + Helper.loggedInAccount.getId())).GET().build();
@@ -129,6 +129,7 @@ public class CategoryModel {
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            throw new ProjectException(e.getMessage());
         }
         return list;
     }

@@ -14,9 +14,8 @@ public class PDFTableGenerator {
     public void generatePDF(Table table, String path) throws IOException {
         PDDocument doc = null;
         try {
-            // add pdf extention if there is no one
-            if(!path.endsWith(".pdf"))
-            {
+            // add pdf extension if there is no one
+            if (!path.endsWith(".pdf")) {
                 path += ".pdf";
             }
 
@@ -45,7 +44,7 @@ public class PDFTableGenerator {
         }
     }
 
-    // Draws current page table grid and border lines and content
+    // Draws current page table grid and borderlines and content
     private void drawCurrentPage(Table table, String[][] currentPageContent, PDPageContentStream contentStream)
             throws IOException {
         float tableTopY = table.isLandscape() ? table.getPageSize().getWidth() - table.getMargin() - 20 : table.getPageSize().getHeight() - table.getMargin() - 20;
@@ -65,18 +64,18 @@ public class PDFTableGenerator {
         nextTextY -= table.getRowHeight();
         nextTextX = table.getMargin() + table.getCellMargin();
 
-        writeLine("Expenses Report [ 01-01-2021 - 31-01-2021 ]", contentStream,table.getMargin(),tableTopY + 15,true);
+        writeLine("Expenses Report [ 01-01-2021 - 31-01-2021 ]", contentStream, table.getMargin(), tableTopY + 15, true);
 
         contentStream.setFont(PDType1Font.HELVETICA, 10);
 
         // Write content
-        for (int i = 0; i < currentPageContent.length; i++) {
-            writeContentLine(currentPageContent[i], contentStream, nextTextX, nextTextY, table);
+        for (String[] strings : currentPageContent) {
+            writeContentLine(strings, contentStream, nextTextX, nextTextY, table);
             nextTextY -= table.getRowHeight();
             nextTextX = table.getMargin() + table.getCellMargin();
         }
 
-        writeLine("Summary is: 134.34 ILS", contentStream,table.getMargin(),nextTextY - 5,true);
+        writeLine("Summary is: 134.34 ILS", contentStream, table.getMargin(), nextTextY - 5, true);
 
         contentStream.close();
     }
@@ -94,10 +93,8 @@ public class PDFTableGenerator {
         }
     }
 
-    private void writeLine(String txt, PDPageContentStream contentStream, float nextTextX, float nextTextY, boolean isBold) throws IOException
-    {
-        if(isBold)
-        {
+    private void writeLine(String txt, PDPageContentStream contentStream, float nextTextX, float nextTextY, boolean isBold) throws IOException {
+        if (isBold) {
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
         }
 

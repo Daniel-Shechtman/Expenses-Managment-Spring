@@ -25,8 +25,7 @@ public class PdfCreator {
     private static final float CELL_MARGIN = 2;
 
 
-    public void createPdfFile(String filePath,String[][] dataArray)
-    {
+    public void createPdfFile(String filePath, String[][] dataArray) {
         data = dataArray;
 
         try {
@@ -38,16 +37,16 @@ public class PdfCreator {
 
     private static Table createContent() {
         // Total size of columns must not be greater than table width.
-        List<Column> columns = new ArrayList<Column>();
+        List<Column> columns = new ArrayList<>();
         columns.add(new Column("Category", 90));
         columns.add(new Column("Currency", 90));
         columns.add(new Column("Cost", 90));
-        columns.add(new Column("Info", 230));
-        columns.add(new Column("Date", 100));
+        columns.add(new Column("Info", 300));
+        columns.add(new Column("Date", 200));
 
         float tableHeight = IS_LANDSCAPE ? PAGE_SIZE.getWidth() - (2 * MARGIN) : PAGE_SIZE.getHeight() - (2 * MARGIN);
 
-        Table table = new TableBuilder()
+        return new TableBuilder()
                 .setCellMargin(CELL_MARGIN)
                 .setColumns(columns)
                 .setContent(data)
@@ -60,7 +59,5 @@ public class PdfCreator {
                 .setTextFont(TEXT_FONT)
                 .setFontSize(FONT_SIZE)
                 .build();
-
-        return table;
     }
 }

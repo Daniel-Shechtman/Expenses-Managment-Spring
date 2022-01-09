@@ -7,7 +7,6 @@ import com.ilandaniel.project.dtos.AccountLoginDTO;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.dtos.ExpenseDTO;
 import com.ilandaniel.project.exceptions.ProjectException;
-import com.ilandaniel.project.helpers.DataBase;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IModel;
 import com.ilandaniel.project.interfaces.IView;
@@ -132,7 +131,13 @@ public class ViewModel implements IViewModel {
                 SwingUtilities.invokeLater(() -> view.showMessage("Errors", finalErrors));
 
             } else {
-                int id = DataBase.getAccountId(client.getUsername());
+                int id = 0;
+                try {
+                    id = model.getAccountIdByUsername(client.getUsername());
+                } catch (ProjectException e) {
+                    SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                    e.printStackTrace();
+                }
                 Helper.loggedInAccount = new Account(id, client.getUsername());
 
                 SwingUtilities.invokeLater(() -> view.showScreen("Home"));
