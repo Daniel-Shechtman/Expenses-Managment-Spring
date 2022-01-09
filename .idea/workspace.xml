@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6443b4b9-3a66-40ad-8541-d81c04800941" name="Changes" comment="commit number 6 beta version v2">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_logging_1_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Expenses-Managment.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/expence_managment_db.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/automobile_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/default_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/food_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/home_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/loan_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/travel_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/classes/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/classes/Category.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/classes/Expense.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/dtos/AccountLoginDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/dtos/AccountRegisterDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/dtos/ExpenseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/exceptions/ProjectException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/Helper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/Column.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/PDFTableGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/PdfCreator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/Table.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/TableBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IViewModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/AccountModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/CategoryModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/ExpenseModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/Model.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/validators/CategoryValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/validators/ExpenseValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/validators/ReportsValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/viewmodels/ViewModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/AddExpenseScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/BaseScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/CategoryScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/HomeScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/LoginScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/MainView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/RegisterScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/ReportsScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/automobile_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/default_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/food_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/home_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/loan_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/travel_icon.png" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="22YNKMKuajk9w2D2KzEw74p0oAt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="format.on.save" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/api" />
+    <property name="optimize.imports.on.save" value="true" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="actions.on.save" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.ilandaniel.project.interfaces" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\dsisb\IdeaProjects\Expenses-Managment\src\images" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\dsisb\IdeaProjects\Expenses-Managment\src\com\ilandaniel\project" />
+      <recent name="C:\Users\dsisb\IdeaProjects\Expenses-Managment\src\com\ilandaniel\project\datepicker\privatejgoodies\forms\layout" />
+      <recent name="C:\Users\dsisb\IdeaProjects\Expenses-Managment\src\com\ilandaniel\project\datepicker" />
+      <recent name="C:\Users\dsisb\IdeaProjects\Expenses-Managment\src\com\ilandaniel\project\classes" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ilandaniel.project.Main" />
+      <module name="Expenses-Managment" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ilandaniel.project.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6443b4b9-3a66-40ad-8541-d81c04800941" name="Changes" comment="" />
+      <created>1640010497763</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1640010497763</updated>
+      <workItem from="1641757649231" duration="208000" />
+      <workItem from="1641757914328" duration="113000" />
+    </task>
+    <task id="LOCAL-00001" summary="commit number 3">
+      <created>1640618958548</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1640618958548</updated>
+    </task>
+    <task id="LOCAL-00002" summary="commit number 4">
+      <created>1640629078432</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1640629078432</updated>
+    </task>
+    <task id="LOCAL-00003" summary="commit number 5">
+      <created>1641480551453</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1641480551453</updated>
+    </task>
+    <task id="LOCAL-00004" summary="commit number 6 beta version">
+      <created>1641559877706</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1641559877706</updated>
+    </task>
+    <task id="LOCAL-00005" summary="commit number 6 beta version v2">
+      <created>1641757561649</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1641757561649</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="commit number 3" />
+    <MESSAGE value="commit number 4" />
+    <MESSAGE value="commit number 5" />
+    <MESSAGE value="commit number 6 beta version" />
+    <MESSAGE value="commit number 6 beta version v2" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit number 6 beta version v2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="7" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/ilandaniel/project/models/CategoryModel.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

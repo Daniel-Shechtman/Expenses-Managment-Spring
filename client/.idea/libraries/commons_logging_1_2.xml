@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="commons-logging-1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/OneDrive/Desktop/java jars/commons-logging-1.2.jar!/" />
+      <root url="jar://$USER_HOME$/OneDrive/Desktop/java jars/fontbox-2.0.23.jar!/" />
+      <root url="jar://$USER_HOME$/OneDrive/Desktop/java jars/json-20211205.jar!/" />
+      <root url="jar://$USER_HOME$/OneDrive/Desktop/java jars/mysql-connector-java-8.0.26.jar!/" />
+      <root url="jar://$USER_HOME$/OneDrive/Desktop/java jars/pdfbox-2.0.25.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
