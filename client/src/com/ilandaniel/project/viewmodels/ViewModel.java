@@ -12,7 +12,6 @@ import com.ilandaniel.project.interfaces.IModel;
 import com.ilandaniel.project.interfaces.IView;
 import com.ilandaniel.project.interfaces.IViewModel;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,17 +52,14 @@ public class ViewModel implements IViewModel {
             try {
                 errors = model.addCategory(category);
                 if (errors.isEmpty()) {
-                    SwingUtilities.invokeLater(() -> {
-                        view.addCategory(category.getName());
-                        view.showMessage("Category manager", "Category added successfully");
-
-                    });
+                    view.addCategory(category.getName());
+                    view.showMessage("Category manager", "Category added successfully");
 
                 } else {
-                    SwingUtilities.invokeLater(() -> view.showMessage("Errors", errors));
+                    view.showMessage("Errors", errors);
                 }
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Error", e.getMessage()));
+                view.showMessage("Error", e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -75,14 +71,12 @@ public class ViewModel implements IViewModel {
             try {
                 boolean isDeleted = model.deleteCategory(categoryName);
                 if (isDeleted) {
-                    SwingUtilities.invokeLater(() -> {
-                        view.deleteCategory(categoryName);
-                        view.showMessage("Category manager", "Category deleted successfully");
-                    });
+                    view.deleteCategory(categoryName);
+                    view.showMessage("Category manager", "Category deleted successfully");
                 }
             } catch (ProjectException e) {
                 e.printStackTrace();
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                view.showMessage("Errors", e.getMessage());
             }
         });
     }
@@ -92,9 +86,9 @@ public class ViewModel implements IViewModel {
         executor.submit(() -> {
             try {
                 List<String> categoryNames = model.getAllCategories();
-                SwingUtilities.invokeLater(() -> view.loadCategoriesNames(categoryNames));
+                view.loadCategoriesNames(categoryNames);
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Error", e.getMessage()));
+                view.showMessage("Error", e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -106,10 +100,10 @@ public class ViewModel implements IViewModel {
             try {
                 List<Expense> expenses = model.getAllExpenses(id);
                 if (expenses != null) {
-                    SwingUtilities.invokeLater(() -> view.loadTableExpenses(expenses));
+                    view.loadTableExpenses(expenses);
                 }
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                view.showMessage("Errors", e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -123,24 +117,23 @@ public class ViewModel implements IViewModel {
             try {
                 errors = model.loginUser(client);
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                view.showMessage("Errors", e.getMessage());
                 e.printStackTrace();
             }
             if (errors != null && !errors.isEmpty()) {
                 String finalErrors = errors;
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", finalErrors));
+                view.showMessage("Errors", finalErrors);
 
             } else {
                 int id = 0;
                 try {
                     id = model.getAccountIdByUsername(client.getUsername());
                 } catch (ProjectException e) {
-                    SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                    view.showMessage("Errors", e.getMessage());
                     e.printStackTrace();
                 }
                 Helper.loggedInAccount = new Account(id, client.getUsername());
-
-                SwingUtilities.invokeLater(() -> view.showScreen("Home"));
+                view.showScreen("Home");
             }
         });
     }
@@ -150,13 +143,11 @@ public class ViewModel implements IViewModel {
         executor.submit(() -> {
             try {
                 model.addNewExpense(expenseDTO);
-                SwingUtilities.invokeLater(() -> {
-                    view.showMessage("Add Expense", "Expense added successfully");
-                    view.showScreen("Home");
-                });
+                view.showMessage("Add Expense", "Expense added successfully");
+                view.showScreen("Home");
 
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                view.showMessage("Errors", e.getMessage());
                 e.printStackTrace();
 
             }
@@ -172,7 +163,7 @@ public class ViewModel implements IViewModel {
                 expenseDTO.setCategoryId(catId);
                 addNewExpense(expenseDTO);
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                view.showMessage("Errors", e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -192,18 +183,15 @@ public class ViewModel implements IViewModel {
             try {
                 String errors = model.createAccount(client);
                 if (errors != null && !errors.isEmpty()) {
-                    SwingUtilities.invokeLater(() -> view.showMessage("Errors", errors));
+                    view.showMessage("Errors", errors);
 
                 } else {
-                    SwingUtilities.invokeLater(() -> {
-                        view.showMessage("Register", "Registered Successful");
-                        view.showScreen("Login");
-                    });
-
+                    view.showMessage("Register", "Registered Successful");
+                    view.showScreen("Login");
                 }
 
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Error", e.getMessage()));
+                view.showMessage("Error", e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -216,7 +204,7 @@ public class ViewModel implements IViewModel {
                 List<Expense> expensesList = model.getReport(fromDate, toDate);
                 view.loadReportsExpenses(expensesList);
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Errors", e.getMessage()));
+                view.showMessage("Errors", e.getMessage());
                 e.printStackTrace();
 
             }
@@ -228,7 +216,7 @@ public class ViewModel implements IViewModel {
     public void logout() {
         executor.submit(() -> {
             Helper.loggedInAccount = null;
-            SwingUtilities.invokeLater(() -> showScreen("Login"));
+            showScreen("Login");
         });
     }
 
@@ -239,7 +227,7 @@ public class ViewModel implements IViewModel {
                 model.deleteSelected(id);
                 initTableExpenses(Helper.loggedInAccount.getId());
             } catch (ProjectException e) {
-                SwingUtilities.invokeLater(() -> view.showMessage("Error", e.getMessage()));
+                view.showMessage("Error", e.getMessage());
                 e.printStackTrace();
             }
         });

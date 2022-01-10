@@ -3,6 +3,8 @@ package com.ilandaniel.project.models;
 import com.ilandaniel.project.dtos.AccountLoginDTO;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.exceptions.ProjectException;
+import com.ilandaniel.project.validators.RegisterValidator;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -12,6 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class AccountModel {
+    RegisterValidator registerValidator = new RegisterValidator();
 
     /**
      * method to log in into the app.
@@ -20,20 +23,21 @@ public class AccountModel {
      * see validators/LoginValidator.
      */
     public String loginUser(AccountLoginDTO client) throws ProjectException {
-        String errors;
-
+        String result;
         try {
+            JSONObject jsonObject = new JSONObject(client);
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/account/login"))
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
+                    .build();
             HttpClient httpClient = HttpClient.newBuilder().build();
-            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/login/" + client.getUsername() + "/" + client.getPassword())).GET().build();
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            errors = httpResponse.body();
-
-
+            result = httpResponse.body();
         } catch (IOException | InterruptedException e) {
             throw new ProjectException(e.getMessage());
         }
 
-        return errors;
+        return result;
     }
 
     /**
@@ -43,22 +47,27 @@ public class AccountModel {
      * see validators/RegisterValidator.
      */
     public String createAccount(AccountRegisterDTO client) throws ProjectException {
-        String errors;
+        String result = registerValidator.validate(client);
+        if (result.isBlank()) {
+            try {
+                JSONObject jsonObject = new JSONObject(client);
+                HttpClient httpClient = HttpClient.newBuilder().build();
+                HttpRequest httpRequest = HttpRequest.newBuilder()
+                        .uri(URI.create("http://localhost:8080/account/createAccount"))
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
+                        .build();
+                HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        try {
-            HttpClient httpClient = HttpClient.newBuilder().build();
-            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/account/createAccount/" + client.getUsername() + "/" + client.getPassword())).GET().build();
-            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-            errors = httpResponse.body();
+                result = httpResponse.body();
 
 
-        } catch (IOException | InterruptedException e) {
-            throw new ProjectException(e.getMessage());
+            } catch (IOException | InterruptedException e) {
+                throw new ProjectException(e.getMessage());
+            }
         }
 
 
-        return errors;
+        return result;
     }
 
     public int getAccountIdByUsername(String username) throws ProjectException {

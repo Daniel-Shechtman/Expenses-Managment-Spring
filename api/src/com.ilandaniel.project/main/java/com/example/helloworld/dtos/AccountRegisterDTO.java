@@ -1,4 +1,4 @@
-package com.ilandaniel.project.dtos;
+package com.example.helloworld.dtos;
 
 public class AccountRegisterDTO {
     private String username;
@@ -29,9 +29,5 @@ public class AccountRegisterDTO {
 
     public void setRePassword(String rePassword) {
         this.rePassword = rePassword;
-    }
-
-    public String getRePassword() {
-        return rePassword;
     }
 }

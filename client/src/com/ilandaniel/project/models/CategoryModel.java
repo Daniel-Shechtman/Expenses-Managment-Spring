@@ -71,9 +71,9 @@ public class CategoryModel {
      */
     public String addCategory(Category category) throws ProjectException {
         String errors = validator.validate(category);
+        category.setAccountId(Helper.loggedInAccount.getId());
         if (errors.isEmpty()) {
             JSONObject jsonObject = new JSONObject(category);
-            jsonObject.put("current_account_id", Helper.loggedInAccount.getId());
             HttpClient httpClient = HttpClient.newBuilder().build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:8080/category/addCategory"))

@@ -78,7 +78,7 @@ public class CategoryController {
 
     @RequestMapping("/addCategory")
     @ResponseBody
-    public ResponseEntity addCategory(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity addCategory(HttpServletRequest request) {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = null;
         if (request != null) {
@@ -93,7 +93,7 @@ public class CategoryController {
                 String data = buffer.toString();
                 JSONObject object = new JSONObject(data);
 
-                String query = "SELECT * FROM categories WHERE name ='" + object.getString("name") + "' AND account_id="+object.getInt("current_account_id");
+                String query = "SELECT * FROM categories WHERE name ='" + object.getString("name") + "' AND account_id="+object.getInt("accountId");
                 ResultSet rs = DataBase.selectAll(connection, query);
                 if (rs != null) {
                     stringBuilder.append("this category all ready exits ");
@@ -102,7 +102,7 @@ public class CategoryController {
                     query = "INSERT INTO categories (name,account_id) VALUES(?,?)";
                     PreparedStatement preparedStatement = connection.prepareStatement(query);
                     preparedStatement.setString(1, object.getString("name"));
-                    preparedStatement.setInt(2, object.getInt("current_account_id"));
+                    preparedStatement.setInt(2, object.getInt("accountId"));
                     preparedStatement.execute();
 
                     return new ResponseEntity("", HttpStatus.OK);

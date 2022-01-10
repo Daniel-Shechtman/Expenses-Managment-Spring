@@ -9,6 +9,10 @@ import com.ilandaniel.project.exceptions.ProjectException;
 
 import java.util.List;
 
+/**
+ * @author Mosh
+ * @see
+ */
 public interface IModel {
     //Categories methods
     String addCategory(Category category) throws ProjectException;
@@ -17,7 +21,11 @@ public interface IModel {
 
     List<String> getAllCategories() throws ProjectException;
 
-    //Home methods
+    /**
+     * @param id
+     * @return
+     * @throws ProjectException
+     */
     List<Expense> getAllExpenses(int id) throws ProjectException;
 
 

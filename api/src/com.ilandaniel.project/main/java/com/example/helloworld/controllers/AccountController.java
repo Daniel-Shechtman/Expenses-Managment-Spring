@@ -1,15 +1,20 @@
 package com.example.helloworld.controllers;
 
 import com.example.helloworld.dtos.AccountLoginDTO;
+import com.example.helloworld.dtos.AccountRegisterDTO;
 import com.example.helloworld.helpers.DataBase;
 import com.example.helloworld.helpers.Security;
 import com.example.helloworld.validators.LoginValidator;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,44 +25,62 @@ import java.sql.SQLException;
 public class AccountController {
     LoginValidator validator = new LoginValidator();
 
-    @RequestMapping(path="/login/{username}/{password}")
-    public ResponseEntity<String> login(@PathVariable String username, @PathVariable String password)
+    @RequestMapping(path="/login")
+    public ResponseEntity<String> login(HttpServletRequest request)
     {
-        AccountLoginDTO client = new AccountLoginDTO(username,password);
-        String errors = validator.validate(client);
-        StringBuilder errorsBuilder = new StringBuilder(errors);
-        if (errorsBuilder.isEmpty()) {
-            try (Connection connection = DataBase.getConnection()) {
-                ResultSet rs = DataBase.selectAll(connection, "SELECT * FROM accounts WHERE username = '" + client.getUsername() + "'");
-
-                if (rs != null) {
-                    String storedHash = rs.getString("password_hash");
-                    String hash = Security.sha512Encryption(client.getPassword());
-                    if (!hash.equals(storedHash)) {
-                        errorsBuilder.append("Incorrect Password.. Please try again");
-                    }
-                } else {
-                    errorsBuilder.append("username is wrong\n");
+        StringBuilder errorsBuilder = new StringBuilder();
+        BufferedReader reader = null;
+        if(request != null){
+            try(Connection connection = DataBase.getConnection()){
+                reader = request.getReader();
+                StringBuilder buffer = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                    buffer.append(System.lineSeparator());
                 }
-
+                String data = buffer.toString();
+                JSONObject object = new JSONObject(data);
+                AccountLoginDTO accountLoginDTO = new AccountLoginDTO(object.getString("username"),object.getString("password"));
+                errorsBuilder.append(validator.validate(accountLoginDTO));
+                if(errorsBuilder.isEmpty()){
+                    ResultSet rs = DataBase.selectAll(connection, "SELECT * FROM accounts WHERE username = '" + accountLoginDTO.getUsername() + "'");
+                    if(rs != null){
+                        String storedHash = rs.getString("password_hash");
+                        String hash = Security.sha512Encryption(accountLoginDTO.getPassword());
+                        if (!hash.equals(storedHash)) {
+                            errorsBuilder.append("Incorrect Password.. Please try again\n");
+                        }
+                    }else{
+                        errorsBuilder.append("username is wrong\n");
+                    }
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
         }
         return new ResponseEntity<>(errorsBuilder.toString(), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/createAccount/{username}/{password}")
-    public ResponseEntity<String> createAccount(@PathVariable String username, @PathVariable String password)
+    @RequestMapping(path = "/createAccount")
+    public ResponseEntity<String> createAccount(HttpServletRequest request)
     {
-        AccountLoginDTO client = new AccountLoginDTO(username,password);
-        String errors = validator.validate(client);
-        StringBuilder errorsBuilder = new StringBuilder(errors);
-
-        if (errorsBuilder.isEmpty()) {
+        BufferedReader reader = null;
+        StringBuilder errorsBuilder = new StringBuilder();
+        if (request != null) {
             try (Connection connection = DataBase.getConnection()) {
+                reader = request.getReader();
+                StringBuilder buffer = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                    buffer.append(System.lineSeparator());
+                }
+                String data = buffer.toString();
+                JSONObject object = new JSONObject(data);
+                AccountRegisterDTO client = new AccountRegisterDTO(object.getString("username"),object.getString("password"),object.getString("rePassword"));
                 ResultSet rs = DataBase.selectAll(connection, "SELECT * FROM accounts WHERE username = '" + client.getUsername() + "'");
                 if (rs != null) {
                     errorsBuilder.append("This username all ready exits\n");
@@ -81,6 +104,8 @@ public class AccountController {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
