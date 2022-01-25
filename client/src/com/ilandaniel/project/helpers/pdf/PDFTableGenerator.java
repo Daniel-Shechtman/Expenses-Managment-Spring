@@ -10,9 +10,12 @@ import java.util.Arrays;
 
 public class PDFTableGenerator {
 
+    private PdfDTO pdfDTO;
+
     // Generates document from Table object
-    public void generatePDF(Table table, String path) throws IOException {
+    public void generatePDF(Table table, String path, PdfDTO pdfDTO) throws IOException {
         PDDocument doc = null;
+        this.pdfDTO = pdfDTO;
         try {
             // add pdf extension if there is no one
             if (!path.endsWith(".pdf")) {
@@ -64,7 +67,7 @@ public class PDFTableGenerator {
         nextTextY -= table.getRowHeight();
         nextTextX = table.getMargin() + table.getCellMargin();
 
-        writeLine("Expenses Report [ 01-01-2021 - 31-01-2021 ]", contentStream, table.getMargin(), tableTopY + 15, true);
+        writeLine("Expenses Report [ " + pdfDTO.getFrom() + " - " + pdfDTO.getTo() + " ]", contentStream, table.getMargin(), tableTopY + 15, true);
 
         contentStream.setFont(PDType1Font.HELVETICA, 10);
 
@@ -75,7 +78,7 @@ public class PDFTableGenerator {
             nextTextX = table.getMargin() + table.getCellMargin();
         }
 
-        writeLine("Summary is: 134.34 ILS", contentStream, table.getMargin(), nextTextY - 5, true);
+        writeLine("Summary is: " + pdfDTO.getSum() + " ILS", contentStream, table.getMargin(), nextTextY - 5, true);
 
         contentStream.close();
     }

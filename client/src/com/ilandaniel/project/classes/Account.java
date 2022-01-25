@@ -1,5 +1,8 @@
 package com.ilandaniel.project.classes;
 
+/**
+ * storing the necessary information about the account
+ */
 public class Account {
     private int id;
     private String username;

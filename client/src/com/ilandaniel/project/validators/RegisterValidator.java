@@ -3,7 +3,18 @@ package com.ilandaniel.project.validators;
 import com.ilandaniel.project.dtos.AccountRegisterDTO;
 import com.ilandaniel.project.interfaces.IValidator;
 
+/**
+ * Register screen validator that checks that all the information is correct
+ */
 public class RegisterValidator implements IValidator {
+    /**
+     * The validate function checks:
+     * 1)Username or password or repassword is not empty
+     * 2)That the password equals the repassword
+     * 3)The password is in the correct length
+     * 4)The username is in the correct length
+     * At the end the function returns the string errors.
+     */
     @Override
     public String validate(Object object) {
         StringBuilder errors = new StringBuilder();

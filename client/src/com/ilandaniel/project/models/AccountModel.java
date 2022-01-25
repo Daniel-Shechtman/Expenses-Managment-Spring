@@ -13,6 +13,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * Account logic methods.
+ */
+
 public class AccountModel {
     RegisterValidator registerValidator = new RegisterValidator();
 
@@ -70,6 +74,9 @@ public class AccountModel {
         return result;
     }
 
+    /**
+     * get the account id by his username.
+     */
     public int getAccountIdByUsername(String username) throws ProjectException {
         int id = -1;
         try {

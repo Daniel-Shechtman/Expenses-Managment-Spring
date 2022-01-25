@@ -22,11 +22,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Main model. contains all app logic.
+ */
 public class Model implements IModel {
     AccountModel accountModel = new AccountModel();
     CategoryModel categoryModel = new CategoryModel();
     ExpenseModel expenseModel = new ExpenseModel();
 
+    /**
+     * add new category into the db
+     *
+     * @param category
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public String addCategory(Category category) throws ProjectException {
         String errors;
@@ -35,6 +45,13 @@ public class Model implements IModel {
         return errors;
     }
 
+    /**
+     * delete category by category name
+     *
+     * @param categoryName
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public boolean deleteCategory(String categoryName) throws ProjectException {
         boolean isDeleted;
@@ -43,6 +60,12 @@ public class Model implements IModel {
         return isDeleted;
     }
 
+    /**
+     * get all categories. return list of categories names
+     *
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public List<String> getAllCategories() throws ProjectException {
         List<String> categoriesNames;
@@ -51,6 +74,13 @@ public class Model implements IModel {
         return categoriesNames;
     }
 
+    /**
+     * get all account expenses by account id
+     *
+     * @param id
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public List<Expense> getAllExpenses(int id) throws ProjectException {
         List<Expense> list;
@@ -59,6 +89,13 @@ public class Model implements IModel {
         return list;
     }
 
+    /**
+     * login to the app.
+     *
+     * @param accountLoginDTO
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public String loginUser(AccountLoginDTO accountLoginDTO) throws ProjectException {
         String errors;
@@ -68,11 +105,24 @@ public class Model implements IModel {
         return errors;
     }
 
+    /**
+     * add new expense to db
+     *
+     * @param expenseDTO
+     * @throws ProjectException
+     */
     @Override
     public void addNewExpense(ExpenseDTO expenseDTO) throws ProjectException {
         expenseModel.addNewExpense(expenseDTO);
     }
 
+    /**
+     * get category id by category name
+     *
+     * @param categoryName
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public int getCategoryIdByName(String categoryName) throws ProjectException {
         int catId;
@@ -82,6 +132,13 @@ public class Model implements IModel {
         return catId;
     }
 
+    /**
+     * create new account in the app
+     *
+     * @param accountRegisterDTO
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public String createAccount(AccountRegisterDTO accountRegisterDTO) throws ProjectException {
         String errors;
@@ -91,6 +148,15 @@ public class Model implements IModel {
         return errors;
     }
 
+    /**
+     * get expenese report for specific account, by from date and to date.
+     * date format: dd/MM/yyyy
+     *
+     * @param fromDateStr
+     * @param toDateStr
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public List<Expense> getReport(String fromDateStr, String toDateStr) throws ProjectException {
         List<Expense> expenses = new ArrayList<>();
@@ -134,11 +200,24 @@ public class Model implements IModel {
         return expenses;
     }
 
+    /**
+     * delete expense by expense id
+     *
+     * @param id
+     * @throws ProjectException
+     */
     @Override
     public void deleteSelected(int id) throws ProjectException {
         expenseModel.deleteSelectedExpenseById(id);
     }
 
+    /**
+     * get account id by account username
+     *
+     * @param userName
+     * @return
+     * @throws ProjectException
+     */
     @Override
     public int getAccountIdByUsername(String userName) throws ProjectException {
         return accountModel.getAccountIdByUsername(userName);

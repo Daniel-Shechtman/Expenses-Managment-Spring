@@ -1,5 +1,8 @@
 package com.ilandaniel.project.dtos;
 
+/**
+ * Account register class that holds the information from register method(Register screen) of the user
+ */
 public class AccountRegisterDTO {
     private String username;
     private String password;

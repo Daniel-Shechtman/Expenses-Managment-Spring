@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Manage categories screen(add new category,delete existing category)
+ */
 public class CategoryScreen extends BaseScreen {
 
 
@@ -25,13 +28,16 @@ public class CategoryScreen extends BaseScreen {
 
 
     public void init() {
+        //initializing the components
         labelTitle = new JLabel("Manage Categories");
         labelCategories = new JLabel("Categories: ");
         labelNewCategory = new JLabel("New Category Name: ");
         btnAddCategory = new JButton("Add Category");
         btnDeleteCategory = new JButton("Delete Category");
         btnCancel = new JButton("Return To Homepage");
+        //initializing the j combo box
         comboBoxCategories = new JComboBox<>();
+        //set the text field size
         textFieldCategory = new JTextField(15);
         constraints = new GridBagConstraints();
         categoriesList = new ArrayList<>();
@@ -39,12 +45,13 @@ public class CategoryScreen extends BaseScreen {
 
 
     public void start() {
+        //setting the jFrame properties
         this.setLayout(new GridBagLayout());
         this.setVisible(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-
+        //placing the components on the grid
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -82,17 +89,20 @@ public class CategoryScreen extends BaseScreen {
         constraints.gridx = 0;
         constraints.gridy = 4;
         this.add(btnCancel, constraints);
+        //setting the location of the screen to be at the center of the screen
         setLocationRelativeTo(null);
         this.pack();
 
-
+        //adding action listener to the cancel button
         btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
 
+        //adding action listener to the add category button
         btnAddCategory.addActionListener(e -> {
             String name = textFieldCategory.getText();
             viewModel.addCategory(new Category(name));
         });
 
+        //adding action listener to delete category button
         btnDeleteCategory.addActionListener(e -> {
             String categoryName = Objects.requireNonNull(comboBoxCategories.getSelectedItem()).toString();
             viewModel.deleteCategory(categoryName);
@@ -105,12 +115,22 @@ public class CategoryScreen extends BaseScreen {
 
     }
 
+    /**
+     * add new category
+     *
+     * @param category
+     */
     public void addCategory(String category) {
         textFieldCategory.setText("");
         categoriesList.add(category);
         updateCategoriesList();
     }
 
+    /**
+     * load categories names into combox
+     *
+     * @param names
+     */
     public void loadCategoriesNamesIntoComboBox(List<String> names) {
         for (String s : names) {
             comboBoxCategories.addItem(s);
@@ -118,11 +138,19 @@ public class CategoryScreen extends BaseScreen {
         }
     }
 
+    /**
+     * update categories combobox.
+     */
     public void updateCategoriesList() {
         DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel(categoriesList.toArray());
         comboBoxCategories.setModel(comboBoxModel);
     }
 
+    /**
+     * delete category from list
+     *
+     * @param category
+     */
     public void deleteCategory(String category) {
         categoriesList.remove(category);
         updateCategoriesList();

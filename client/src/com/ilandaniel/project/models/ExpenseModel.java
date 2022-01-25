@@ -19,6 +19,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Category logic methods
+ */
 public class ExpenseModel {
 
     private final IValidator validator;
@@ -27,6 +30,11 @@ public class ExpenseModel {
         validator = new ExpenseValidator();
     }
 
+    /**
+     * add new expense into the db
+     *
+     * @throws ProjectException
+     */
     public void addNewExpense(ExpenseDTO expenseDTO) throws ProjectException {
         String errors = validator.validate(expenseDTO);
         if (errors.isEmpty()) {
@@ -85,6 +93,11 @@ public class ExpenseModel {
         return expenses;
     }
 
+    /**
+     * delete expense from db by expense id
+     *
+     * @throws ProjectException
+     */
     public void deleteSelectedExpenseById(int id) throws ProjectException {
 
         try {

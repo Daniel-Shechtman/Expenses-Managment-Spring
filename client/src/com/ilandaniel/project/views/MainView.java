@@ -9,6 +9,9 @@ import com.ilandaniel.project.interfaces.IViewModel;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * implements the IView interface-in charge of all the screens in the project
+ */
 public class MainView implements IView {
 
     IViewModel viewModel;
@@ -31,6 +34,10 @@ public class MainView implements IView {
 
     }
 
+    /**
+     * the first screen will be the login screen, and we are checking if the thread is of kind
+     * EDT
+     */
     @Override
     public void start() {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -58,6 +65,12 @@ public class MainView implements IView {
         this.viewModel = viewModel;
     }
 
+    /**
+     * showing all the messages that passed from the viewModel to the current logged-in user
+     *
+     * @param title
+     * @param msg
+     */
     @Override
     public void showMessage(String title, String msg) {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -67,56 +80,75 @@ public class MainView implements IView {
         }
     }
 
+    /**
+     * receiving screen name and initializing that screen
+     *
+     * @param name
+     */
     @Override
     public void showScreen(String name) {
-        currentScreen.dispose2();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("I AM BEFORE DISPOSE");
+                currentScreen.dispose();
+                System.out.println("I AM AFTER DISPOSE");
 
-        switch (name) {
-            case "Home" -> {
-                homeScreen = new HomeScreen();
-                homeScreen.setViewModel(viewModel);
-                homeScreen.init();
-                homeScreen.start();
-                currentScreen = homeScreen;
+                switch (name) {
+                    case "Home" -> {
+                        homeScreen = new HomeScreen();
+                        homeScreen.setViewModel(viewModel);
+                        homeScreen.init();
+                        homeScreen.start();
+                        currentScreen = homeScreen;
+                    }
+                    case "Category" -> {
+                        categoryScreen = new CategoryScreen();
+                        categoryScreen.setViewModel(viewModel);
+                        categoryScreen.init();
+                        categoryScreen.start();
+                        currentScreen = categoryScreen;
+                    }
+                    case "AddExpense" -> {
+                        expenseScreen = new AddExpenseScreen();
+                        expenseScreen.setViewModel(viewModel);
+                        expenseScreen.init();
+                        expenseScreen.start();
+                        currentScreen = expenseScreen;
+                    }
+                    case "Login" -> {
+                        loginScreen = new LoginScreen();
+                        loginScreen.setViewModel(viewModel);
+                        loginScreen.init();
+                        loginScreen.start();
+                        currentScreen = loginScreen;
+                    }
+                    case "Register" -> {
+                        registerScreen = new RegisterScreen();
+                        registerScreen.setViewModel(viewModel);
+                        registerScreen.init();
+                        registerScreen.start();
+                        currentScreen = registerScreen;
+                    }
+                    case "Reports" -> {
+                        reportsScreen = new ReportsScreen();
+                        reportsScreen.setViewModel(viewModel);
+                        reportsScreen.init();
+                        reportsScreen.start();
+                        currentScreen = reportsScreen;
+                    }
+                }
             }
-            case "Category" -> {
-                categoryScreen = new CategoryScreen();
-                categoryScreen.setViewModel(viewModel);
-                categoryScreen.init();
-                categoryScreen.start();
-                currentScreen = categoryScreen;
-            }
-            case "AddExpense" -> {
-                expenseScreen = new AddExpenseScreen();
-                expenseScreen.setViewModel(viewModel);
-                expenseScreen.init();
-                expenseScreen.start();
-                currentScreen = expenseScreen;
-            }
-            case "Login" -> {
-                loginScreen = new LoginScreen();
-                loginScreen.setViewModel(viewModel);
-                loginScreen.init();
-                loginScreen.start();
-                currentScreen = loginScreen;
-            }
-            case "Register" -> {
-                registerScreen = new RegisterScreen();
-                registerScreen.setViewModel(viewModel);
-                registerScreen.init();
-                registerScreen.start();
-                currentScreen = registerScreen;
-            }
-            case "Reports" -> {
-                reportsScreen = new ReportsScreen();
-                reportsScreen.setViewModel(viewModel);
-                reportsScreen.init();
-                reportsScreen.start();
-                currentScreen = reportsScreen;
-            }
-        }
+        });
+
     }
 
+    /**
+     * if the viewModel passes the category name after deleting the category, screen will refresh
+     * the category list
+     *
+     * @param categoryName
+     */
     @Override
     public void deleteCategory(String categoryName) {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -127,6 +159,12 @@ public class MainView implements IView {
 
     }
 
+    /**
+     * if the viewModel passes the category name after adding new category, screen will refresh
+     * the category list
+     *
+     * @param categoryName
+     */
     @Override
     public void addCategory(String categoryName) {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -137,7 +175,11 @@ public class MainView implements IView {
 
     }
 
-
+    /**
+     * after a new expense is added the home screen will refresh the expense list
+     *
+     * @param expenses
+     */
     @Override
     public void loadTableExpenses(List<Expense> expenses) {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -148,6 +190,12 @@ public class MainView implements IView {
 
     }
 
+    /**
+     * when the user enters the expense screen,the screen will present all the category
+     * names
+     *
+     * @param names
+     */
     public void loadCategoriesNames(List<String> names) {
         if (SwingUtilities.isEventDispatchThread()) {
             if (currentScreen == expenseScreen) {
@@ -168,6 +216,11 @@ public class MainView implements IView {
 
     }
 
+    /**
+     * after the user asked for specific expenses the view presents those expenses
+     *
+     * @param expensesList
+     */
     @Override
     public void loadReportsExpenses(List<Expense> expensesList) {
         if (SwingUtilities.isEventDispatchThread()) {

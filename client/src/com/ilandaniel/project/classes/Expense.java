@@ -2,6 +2,9 @@ package com.ilandaniel.project.classes;
 
 import java.util.Date;
 
+/**
+ * storing the necessary expense information
+ */
 public class Expense {
     private int id;
     private int categoryId;
@@ -78,6 +81,11 @@ public class Expense {
         this.categoryName = categoryName;
     }
 
+    /**
+     * overriding the toString method
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "Expense{" +

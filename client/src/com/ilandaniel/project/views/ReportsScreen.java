@@ -4,6 +4,7 @@ package com.ilandaniel.project.views;
 import com.ilandaniel.project.classes.Expense;
 import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.helpers.pdf.PdfCreator;
+import com.ilandaniel.project.helpers.pdf.PdfDTO;
 import com.ilandaniel.project.interfaces.IViewModel;
 
 import javax.swing.*;
@@ -16,6 +17,9 @@ import java.io.File;
 import java.util.List;
 import java.util.*;
 
+/**
+ * Get reports screen
+ */
 public class ReportsScreen extends BaseScreen {
     private JPanel panelNorth, panelCenter, panelSouth;
     private JFileChooser fileChooser;
@@ -36,6 +40,7 @@ public class ReportsScreen extends BaseScreen {
 
     @Override
     public void init() {
+        //initializing the components
         fileChooser = new JFileChooser();
         scrollPane = new JScrollPane();
         tableExpenses = new JTable();
@@ -46,8 +51,10 @@ public class ReportsScreen extends BaseScreen {
         labelToDate = new JLabel("To Date: ");
         labelSumOfExpenses = new JLabel("The Total Sum Of Selected Expenses: ");
         labelExpensesTotal = new JLabel("0");
+        //set the text field size
         tfFromDate = new JTextField(15);
         tfToDate = new JTextField(15);
+        //initializing the j combo box
         comboBoxCurrencies = new JComboBox<>();
         labelInstruction = new JLabel("<html><font color='red'>Valid date format: DD-MM-YYYY<br><br>Minimum year: 2021<br>Max year: 2100</font></html>");
         btnCancel = new JButton("Cancel");
@@ -60,6 +67,7 @@ public class ReportsScreen extends BaseScreen {
 
     @Override
     public void start() {
+        //setting the jFrame properties
         this.setLayout(new BorderLayout());
         this.setVisible(true);
         this.setResizable(true);
@@ -71,7 +79,7 @@ public class ReportsScreen extends BaseScreen {
         fileChooser.addChoosableFileFilter(filter);
         fileChooser.setDialogTitle("select path to save file");
 
-
+        //placing the components on the grid
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -99,13 +107,13 @@ public class ReportsScreen extends BaseScreen {
         gridBagConstraints.gridx = 1;
         panelNorth.add(btnCancel, gridBagConstraints);
 
-
+        //setting of the table
         panelCenter.add(scrollPane, BorderLayout.CENTER);
         panelCenter.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         setComboBoxCurrencies();
 
-
+        //add action listener to the save report as pdf button
         btnSaveReportAsPdf.addActionListener(e -> {
             JButton b = (JButton) e.getSource();
             int userSelection = fileChooser.showSaveDialog(b.getParent());
@@ -113,38 +121,52 @@ public class ReportsScreen extends BaseScreen {
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
                 String[][] strData = saveDataAssStrDoubleArr();
+                PdfDTO pdfDTO = new PdfDTO();
+                pdfDTO.setFrom(tfFromDate.getText());
+                pdfDTO.setTo(tfToDate.getText());
+                pdfDTO.setSum(Double.parseDouble(String.format("%.2f", Double.parseDouble(labelExpensesTotal.getText()))));
                 PdfCreator pdfCreator = new PdfCreator();
-                pdfCreator.createPdfFile(fileToSave.getPath(), strData);
+                pdfCreator.createPdfFile(fileToSave.getPath(), strData, pdfDTO);
 
-                SwingUtilities.invokeLater(() -> Helper.showMessage("Report", "Report Saved"));
+                Helper.showMessage("Report", "Report Saved");
             }
         });
         panelSouth.add(btnSaveReportAsPdf);
 
-
+        //adding panels to the jFrame using border layout
         this.add(panelNorth, BorderLayout.NORTH);
         this.add(panelCenter, BorderLayout.CENTER);
         this.add(panelSouth, BorderLayout.SOUTH);
 
+        //setting the location of the screen to be at the center of the screen
         setLocationRelativeTo(null);
 
+        //setting the size of the screen
         this.setMinimumSize(new Dimension(800, 400));
 
-
+        //add action listener to the get report button
         btnGetReport.addActionListener(e -> {
             String fromDate = tfFromDate.getText();
             String toDate = tfToDate.getText();
             viewModel.getReport(fromDate, toDate);
         });
 
+        //adding components to the panel
         panelSouth.add(labelSumOfExpenses);
         panelSouth.add(labelExpensesTotal);
         panelSouth.add(comboBoxCurrencies);
         panelSouth.add(btnSaveReportAsPdf);
 
+
+        //add action listener to cancel button
         btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
     }
 
+    /**
+     * getting all the necessary information for the pdf report
+     *
+     * @return
+     */
     private String[][] saveDataAssStrDoubleArr() {
         String[][] data = new String[expensesList.size()][];
 
@@ -163,11 +185,17 @@ public class ReportsScreen extends BaseScreen {
         return data;
     }
 
+
     public void loadTableExpenses(List<Expense> expensesList) {
         this.expensesList = expensesList;
         DisplayExpense(expensesList);
     }
 
+    /**
+     * initializing the expense table with an expense list
+     *
+     * @param expenseList
+     */
     private void DisplayExpense(List<Expense> expenseList) {
         DefaultTableModel aModel = new DefaultTableModel() {
 
@@ -237,6 +265,12 @@ public class ReportsScreen extends BaseScreen {
         scrollPane.setViewportView(tableExpenses);
     }
 
+    /**
+     * calculating the exchange rate form the selected currency
+     *
+     * @param currency
+     * @return
+     */
     private double calcCurrencyRate(String currency) {
         switch (Objects.requireNonNull(comboBoxCurrencies.getSelectedItem()).toString()) {
             case "ILS":
@@ -254,7 +288,9 @@ public class ReportsScreen extends BaseScreen {
         return 0;
     }
 
-
+    /**
+     * setting the currencies to the combo box
+     */
     private void setComboBoxCurrencies() {
         for (Map.Entry<String, Float> set : Helper.currencies.entrySet()) {
             comboBoxCurrencies.addItem(set.getKey());

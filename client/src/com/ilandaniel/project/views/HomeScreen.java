@@ -13,7 +13,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-
+/**
+ * Home screen that navigates to all others screens(expense,category manage,reports)
+ */
 public class HomeScreen extends BaseScreen {
     private JPanel panelNorth, panelCenter;
     private JTable tableExpense;
@@ -29,6 +31,7 @@ public class HomeScreen extends BaseScreen {
     }
 
     public void init() {
+        //initializing the components
         tableExpense = new JTable();
         scrollPane = new JScrollPane();
         panelNorth = new JPanel(new GridBagLayout());
@@ -42,17 +45,21 @@ public class HomeScreen extends BaseScreen {
         initTable();
     }
 
+    /**
+     * load expeneses into expenses table when app start
+     */
     private void initTable() {
         viewModel.initTableExpenses(Helper.loggedInAccount.getId());
     }
 
     public void start() {
+        //setting the jFrame properties
         this.setLayout(new BorderLayout());
         this.setVisible(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-
+        //placing the components on the grid
         bagConstraints.gridwidth = 5;
         bagConstraints.gridx = 0;
         bagConstraints.gridy = 0;
@@ -76,20 +83,26 @@ public class HomeScreen extends BaseScreen {
         panelCenter.add(scrollPane, BorderLayout.CENTER);
         panelCenter.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-
+        //adding the panel to the jFrame
         this.add(panelNorth, BorderLayout.NORTH);
         this.add(panelCenter, BorderLayout.CENTER);
 
+        //setting the location of the screen to be at the center of the screen
         setLocationRelativeTo(null);
 
+        //setting the size of the jFrame
         this.setMinimumSize(new Dimension(900, 600));
 
+        //adding action listener to the manage category button
         btnManageCategory.addActionListener(e -> viewModel.showScreen("Category"));
 
+        //adding action listener to the add expense button
         btnAddExpense.addActionListener(e -> viewModel.showScreen("AddExpense"));
 
+        //adding action listener to the get reports button
         btnGetReports.addActionListener(e -> viewModel.showScreen("Reports"));
 
+        //adding action listener to the logout button
         btnLogout.addActionListener(e -> viewModel.logout());
     }
 
@@ -98,12 +111,21 @@ public class HomeScreen extends BaseScreen {
         this.viewModel = viewModel;
     }
 
+    /**
+     * load expenses into expenses table
+     *
+     * @param expenseList
+     */
     public void loadTableExpenses(List<Expense> expenseList) {
         this.expenseList = expenseList;
         DisplayExpense(expenseList);
     }
 
-
+    /**
+     * display format for the table.
+     *
+     * @param expenseList
+     */
     private void DisplayExpense(List<Expense> expenseList) {
         DefaultTableModel aModel = new DefaultTableModel() {
 

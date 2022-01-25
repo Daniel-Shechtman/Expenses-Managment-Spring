@@ -17,6 +17,11 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Category logic methods
+ */
+
 public class CategoryModel {
 
     private final IValidator validator;
@@ -28,6 +33,7 @@ public class CategoryModel {
 
     /**
      * getting category from DB by the category_id.
+     * * @throws ProjectException
      */
     public static Category getCategoryById(int id) throws ProjectException {
         Category category = null;
@@ -48,6 +54,11 @@ public class CategoryModel {
     }
 
 
+    /**
+     * get the category id by category name.
+     *
+     * @throws ProjectException
+     */
     public int getCategoryIdByName(String categoryName) throws ProjectException {
         HttpClient httpClient = HttpClient.newBuilder().build();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/category/getCategoryIdByName/" + categoryName)).GET().build();
@@ -68,6 +79,8 @@ public class CategoryModel {
 
     /**
      * add new category into the DB.
+     *
+     * @throws ProjectException
      */
     public String addCategory(Category category) throws ProjectException {
         String errors = validator.validate(category);
@@ -96,6 +109,7 @@ public class CategoryModel {
 
     /**
      * delete category from the DB
+     * *  @throws ProjectException
      */
     public boolean deleteCategory(String categoryName) throws ProjectException {
         HttpClient httpClient = HttpClient.newBuilder().build();
@@ -117,6 +131,11 @@ public class CategoryModel {
         return true;
     }
 
+    /**
+     * get all categories. returning a list of category names.
+     *
+     * @throws ProjectException
+     */
     public List<String> getAllCategories() throws ProjectException {
         List<String> list = new ArrayList<>();
         HttpClient httpClient = HttpClient.newBuilder().build();

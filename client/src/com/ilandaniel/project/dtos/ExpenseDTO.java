@@ -1,11 +1,12 @@
 package com.ilandaniel.project.dtos;
 
+/**
+ * Expense class that holds the information of add-expense method(Expense screen) of the current expense
+ */
 public class ExpenseDTO {
     private int categoryId;
     private String categoryName;
     private String cost;
-
-
     private String currency;
     private String info;
 

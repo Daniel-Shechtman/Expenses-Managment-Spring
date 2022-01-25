@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * view model class that implements IViewModel and contains all the methods of the models
+ */
 public class ViewModel implements IViewModel {
 
     private IModel model;
@@ -28,16 +31,31 @@ public class ViewModel implements IViewModel {
         executor = Executors.newFixedThreadPool(3);
     }
 
+    /**
+     * setting the model from type IModel
+     *
+     * @param model
+     */
     @Override
     public void setModel(IModel model) {
         this.model = model;
     }
 
+    /**
+     * setting the view from type IView
+     *
+     * @param view
+     */
     @Override
     public void setView(IView view) {
         this.view = view;
     }
 
+    /**
+     * switches between the different screens
+     *
+     * @param name
+     */
     @Override
     public void showScreen(String name) {
         if (name != null) {
@@ -45,6 +63,12 @@ public class ViewModel implements IViewModel {
         }
     }
 
+    /**
+     * receives category and sends it to the model,if there are no errors message appears on the screen that category added successfully
+     * and if any errors accord message appears with the specific errors
+     *
+     * @param category
+     */
     @Override
     public void addCategory(Category category) {
         executor.submit(() -> {
@@ -65,6 +89,12 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * method that receives category name passes it to the model,the model returns a boolean value
+     * if the value is true a message appears on users screen,otherwise message with the errors appears.
+     *
+     * @param categoryName
+     */
     @Override
     public void deleteCategory(String categoryName) {
         executor.submit(() -> {
@@ -81,6 +111,9 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * getting list of categories from the model and passes the list to the view
+     */
     @Override
     public void getAllCategories() {
         executor.submit(() -> {
@@ -94,6 +127,11 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * init the table of expenses by the current user logged in
+     *
+     * @param id
+     */
     @Override
     public void initTableExpenses(int id) {
         executor.submit(() -> {
@@ -109,7 +147,11 @@ public class ViewModel implements IViewModel {
         });
     }
 
-
+    /**
+     * receives an account login data and passes it to the model,if an error accords a message will appear on users screen otherwise the user logged in.
+     *
+     * @param client
+     */
     @Override
     public void loginUser(AccountLoginDTO client) {
         executor.submit(() -> {
@@ -138,6 +180,11 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * receives and expense data and passes it to the model,if no exception accords a message will appear on users screen otherwise message with the errors will show
+     *
+     * @param expenseDTO
+     */
     @Override
     public void addNewExpense(ExpenseDTO expenseDTO) {
         executor.submit(() -> {
@@ -154,6 +201,11 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * receives and expense data and passes the id of the category to the view
+     *
+     * @param expenseDTO
+     */
     @Override
     public void getCategoryIdByName(ExpenseDTO expenseDTO) {
         executor.submit(() -> {
@@ -197,6 +249,12 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * Getting expense report from specific dates(E.g. from 1-1-2022 to 31-12-2022)
+     *
+     * @param fromDate
+     * @param toDate
+     */
     @Override
     public void getReport(String fromDate, String toDate) {
         executor.submit(() -> {
@@ -212,6 +270,9 @@ public class ViewModel implements IViewModel {
 
     }
 
+    /**
+     * logging out the current user
+     */
     @Override
     public void logout() {
         executor.submit(() -> {
@@ -220,6 +281,11 @@ public class ViewModel implements IViewModel {
         });
     }
 
+    /**
+     * delete selected row from the expense table by receiving the id of that specific row
+     *
+     * @param id
+     */
     @Override
     public void deleteSelected(int id) {
         executor.submit(() -> {

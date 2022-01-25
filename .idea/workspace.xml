@@ -2,63 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6443b4b9-3a66-40ad-8541-d81c04800941" name="Changes" comment="commit number 6 beta version v2">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_logging_1_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Expenses-Managment.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/expence_managment_db.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/automobile_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/default_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/food_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/home_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/loan_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Expenses-Managment/images/travel_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/classes/Account.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/classes/Category.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/classes/Expense.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/dtos/AccountLoginDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/dtos/AccountRegisterDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/dtos/ExpenseDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/exceptions/ProjectException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/Helper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/Column.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/PDFTableGenerator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/PdfCreator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/Table.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/helpers/pdf/TableBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IValidator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/interfaces/IViewModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/AccountModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/CategoryModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/ExpenseModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/models/Model.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/validators/CategoryValidator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/validators/ExpenseValidator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/validators/ReportsValidator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/viewmodels/ViewModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/AddExpenseScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/BaseScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/CategoryScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/HomeScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/LoginScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/MainView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/RegisterScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ilandaniel/project/views/ReportsScreen.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/automobile_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/default_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/food_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/home_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/loan_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/travel_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +34,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="format.on.save" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/api" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/client" />
     <property name="optimize.imports.on.save" value="true" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
@@ -193,6 +137,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit number 3" />

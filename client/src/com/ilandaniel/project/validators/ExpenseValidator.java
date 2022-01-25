@@ -7,13 +7,17 @@ import com.ilandaniel.project.helpers.Helper;
 import com.ilandaniel.project.interfaces.IValidator;
 import com.ilandaniel.project.models.CategoryModel;
 
+/**
+ * Expense screen fields validator that checks if all the information is correct
+ */
 public class ExpenseValidator implements IValidator {
 
     /**
-     * validate Expense by checking:
-     * 1) it's not null or there are empty fields.
-     * 2) cost is above 0.
-     * 3) valid category id by checking it in the DB.
+     * Validate Expense by checking:
+     * 1) It's not null or there are empty fields.
+     * 2) Cost is above 0.
+     * 3) Valid category id by checking it in the DB.
+     * At the end the function returns the string errors.
      */
     @Override
     public String validate(Object object) {

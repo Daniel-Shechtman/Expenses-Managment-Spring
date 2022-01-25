@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Add new expense screen
+ */
 public class AddExpenseScreen extends BaseScreen {
     private JLabel labelTitle, labelCategories, labelCost, labelCurrency, labelInfo;
     private JButton btnAddExpense, btnCancel;
@@ -23,9 +26,12 @@ public class AddExpenseScreen extends BaseScreen {
 
     }
 
-
+    /**
+     * initializing the gui components
+     */
     @Override
     public void init() {
+        //setting all the vars
         labelTitle = new JLabel("Add New Expense");
         labelCategories = new JLabel("Categories: ");
         labelCurrency = new JLabel("Currency: ");
@@ -33,8 +39,10 @@ public class AddExpenseScreen extends BaseScreen {
         labelCost = new JLabel("Cost: ");
         btnAddExpense = new JButton("Add Expense");
         btnCancel = new JButton("Return To Homepage");
+        //creating the combo box that displays the categories and the currencies
         comboBoxCategories = new JComboBox<>();
         comboBoxCurrencies = new JComboBox<>();
+        //setting the field and textarea size
         textFieldCost = new JTextField(15);
         textAreaInfo = new JTextArea(3, 15);
         textAreaInfo.setLineWrap(true);
@@ -44,12 +52,13 @@ public class AddExpenseScreen extends BaseScreen {
 
     @Override
     public void start() {
+        //setting the jFrame properties
         this.setLayout(new GridBagLayout());
         this.setVisible(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-
+        //placing the components on the grid
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -100,12 +109,13 @@ public class AddExpenseScreen extends BaseScreen {
         constraints.gridx = 1;
         constraints.gridy = 5;
         this.add(btnCancel, constraints);
+        //setting the location of the screen to the center
         setLocationRelativeTo(null);
         this.pack();
 
-
+        //adding action listener to the cancel button
         btnCancel.addActionListener(e -> viewModel.showScreen("Home"));
-
+        //adding action listener to the add new expense button
         btnAddExpense.addActionListener(e -> {
             String categoryName = Objects.requireNonNull(comboBoxCategories.getSelectedItem()).toString();
             String currency = Objects.requireNonNull(comboBoxCurrencies.getSelectedItem()).toString();
@@ -126,12 +136,20 @@ public class AddExpenseScreen extends BaseScreen {
 
     }
 
+    /**
+     * load the categories names into the combobox
+     *
+     * @param names
+     */
     public void loadCategoriesNamesIntoComboBox(List<String> names) {
         for (String s : names) {
             comboBoxCategories.addItem(s);
         }
     }
 
+    /**
+     * load currencies into combox
+     */
     public void setCurrencies() {
         for (Map.Entry<String, Float> set : Helper.currencies.entrySet()) {
             comboBoxCurrencies.addItem(set.getKey());

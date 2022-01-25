@@ -25,11 +25,11 @@ public class PdfCreator {
     private static final float CELL_MARGIN = 2;
 
 
-    public void createPdfFile(String filePath, String[][] dataArray) {
+    public void createPdfFile(String filePath, String[][] dataArray, PdfDTO pdfDTO) {
         data = dataArray;
 
         try {
-            new PDFTableGenerator().generatePDF(createContent(), filePath);
+            new PDFTableGenerator().generatePDF(createContent(), filePath, pdfDTO);
         } catch (IOException e) {
             e.printStackTrace();
         }

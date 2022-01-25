@@ -6,6 +6,9 @@ import com.ilandaniel.project.interfaces.IViewModel;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Register new user screen
+ */
 public class RegisterScreen extends BaseScreen {
     private JLabel labelTitle, labelUsername, labelPassword, labelRePassword;
     private JButton btnLogin, btnRegister;
@@ -19,12 +22,14 @@ public class RegisterScreen extends BaseScreen {
 
     @Override
     public void init() {
+        //initializing the components
         labelTitle = new JLabel("Register");
         labelUsername = new JLabel("username: ");
         labelPassword = new JLabel("password: ");
         labelRePassword = new JLabel("confirm your password: ");
         btnLogin = new JButton("log in");
         btnRegister = new JButton("create account");
+        //set the text field size
         textFieldUsername = new JTextField(15);
         textFieldPassword = new JPasswordField(15);
         textFieldRePassword = new JPasswordField(15);
@@ -33,12 +38,13 @@ public class RegisterScreen extends BaseScreen {
 
     @Override
     public void start() {
+        //setting the jFrame properties
         this.setLayout(new GridBagLayout());
         this.setVisible(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-
+        //placing the components on the grid
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -78,11 +84,14 @@ public class RegisterScreen extends BaseScreen {
         constraints.gridy = 4;
         this.add(btnLogin, constraints);
 
+        //setting the location of the screen to be at the center of the screen
         setLocationRelativeTo(null);
         this.pack();
 
+        //add action listener to the login button
         btnLogin.addActionListener(e -> viewModel.showScreen("Login"));
 
+        //add action listener to the register button
         btnRegister.addActionListener(e -> {
             String username, password, rePassword;
             username = textFieldUsername.getText();

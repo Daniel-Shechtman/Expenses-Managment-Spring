@@ -2,7 +2,19 @@ package com.ilandaniel.project.validators;
 
 import com.ilandaniel.project.interfaces.IValidator;
 
+/**
+ * Reports screen validator the checks if all the information is correct
+ */
 public class ReportsValidator implements IValidator {
+    /**
+     * Validate function that checks:
+     * 1)The object is instanceof String(The from date or to date)
+     * 2)The string of the date is separated to three small strings (E.g 22-02-2022 is good input while 222-02-2022 is not a good input)
+     * 3)The value of the day is greater than 0 and smaller than 32
+     * 4)The value of the month is greater than 0 and smaller than 13
+     * 5)The value of the year is greater than 2020 and smaller than 2101
+     * At the end the function return string of all the errors
+     */
     @Override
     public String validate(Object object) {
         StringBuilder errors = new StringBuilder();

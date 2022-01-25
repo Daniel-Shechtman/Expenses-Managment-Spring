@@ -1,11 +1,14 @@
 package com.ilandaniel.project.classes;
 
+/**
+ * storing the necessary category information
+ */
 public class Category {
     private int id;
     private int accountId;
     private String name;
 
-    public Category( String name) {
+    public Category(String name) {
         setName(name);
     }
 
